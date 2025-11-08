@@ -55,14 +55,18 @@ export default function MintVampire({ onMint }) {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-[400px]">
-      <div className="bg-[#1a1a1a] p-12 rounded-2xl border border-[#333333] max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-2">Create Your Vampire</h2>
-        <p className="text-[#b0b0b0] mb-8">Pay the entry fee and become a Fledgling Vampire</p>
+    <div className="flex justify-center items-center min-h-[500px]">
+      <div className="bg-gradient-to-br from-gray-800/90 via-gray-900/80 to-gray-800/90 backdrop-blur-md p-12 rounded-3xl border border-red-900/30 shadow-2xl shadow-red-900/20 max-w-2xl w-full">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-extrabold mb-3 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+            Create Your Vampire
+          </h2>
+          <p className="text-gray-400 text-lg">Pay the entry fee and become a Fledgling Vampire</p>
+        </div>
         
-        <form onSubmit={handleMint}>
+        <form onSubmit={handleMint} className="mb-8">
           <div className="mb-6">
-            <label htmlFor="referrerCode" className="block mb-2 font-semibold">
+            <label htmlFor="referrerCode" className="block mb-3 font-bold text-gray-300">
               Referrer Code (Optional)
             </label>
             <input
@@ -71,44 +75,45 @@ export default function MintVampire({ onMint }) {
               value={referrerCode}
               onChange={(e) => setReferrerCode(e.target.value)}
               placeholder="Enter referral code"
-              className="w-full px-3 py-3 bg-[#0a0a0a] border border-[#333333] rounded-lg text-white text-base focus:outline-none focus:border-[#8b0000]"
+              className="w-full px-5 py-4 bg-gradient-to-br from-gray-900 to-black border-2 border-gray-700/50 rounded-xl text-white text-base focus:outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30 transition-all duration-300"
             />
-            <small className="block mt-2 text-[#b0b0b0] text-sm">
+            <small className="block mt-3 text-gray-500 text-sm font-medium">
               If you were referred by another vampire, enter their code here
             </small>
           </div>
 
           {error && (
-            <div className="bg-red-500/15 border-2 border-red-500 text-red-500 p-4 rounded-lg mb-4 text-sm leading-relaxed animate-[shake_0.3s_ease-in-out]" role="alert">
-              <strong className="block mb-1 text-base">Error:</strong> {error}
+            <div className="bg-red-500/20 border-2 border-red-500/50 text-red-400 p-5 rounded-xl mb-6 text-sm leading-relaxed animate-[shake_0.3s_ease-in-out] shadow-lg shadow-red-900/30" role="alert">
+              <strong className="block mb-2 text-base font-bold">⚠️ Error:</strong> {error}
             </div>
           )}
 
           <button 
             type="submit" 
-            className="w-full px-6 py-3 bg-[#8b0000] text-white border-none rounded-lg text-base cursor-pointer transition-all font-semibold hover:bg-[#a00000] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            className="w-full px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white border-none rounded-xl text-lg font-extrabold cursor-pointer transition-all duration-300 hover:from-red-700 hover:to-red-800 hover:scale-105 hover:shadow-xl hover:shadow-red-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none border-2 border-red-500/50 shadow-lg"
             disabled={loading}
           >
-            {loading ? 'Minting...' : 'Mint Vampire (0.0001 ETH)'}
+            {loading ? '🩸 Minting...' : '🩸 Mint Vampire (0.0001 ETH)'}
           </button>
         </form>
 
-        <div className="mt-8 pt-8 border-t border-[#333333]">
-          <h3 className="text-xl font-bold mb-4">What you get:</h3>
-          <ul className="list-none pl-0">
-            <li className="py-2 pl-6 relative before:content-['✓'] before:absolute before:left-0 before:text-[#8b0000] before:font-bold">
-              Unique Vampire NFT with random traits
-            </li>
-            <li className="py-2 pl-6 relative before:content-['✓'] before:absolute before:left-0 before:text-[#8b0000] before:font-bold">
-              Your own referral code
-            </li>
-            <li className="py-2 pl-6 relative before:content-['✓'] before:absolute before:left-0 before:text-[#8b0000] before:font-bold">
-              Access to hunting grounds
-            </li>
-            <li className="py-2 pl-6 relative before:content-['✓'] before:absolute before:left-0 before:text-[#8b0000] before:font-bold">
-              Ability to build your coven
-            </li>
-          </ul>
+        <div className="mt-10 pt-8 border-t border-gray-700/50">
+          <h3 className="text-2xl font-extrabold mb-6 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent text-center">
+            What you get:
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              'Unique Vampire NFT with random traits',
+              'Your own referral code',
+              'Access to hunting grounds',
+              'Ability to build your coven'
+            ].map((item, index) => (
+              <div key={index} className="flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl border border-gray-700/30 hover:border-red-700/50 transition-all duration-300">
+                <span className="text-2xl">✓</span>
+                <span className="text-gray-300 font-medium">{item}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
