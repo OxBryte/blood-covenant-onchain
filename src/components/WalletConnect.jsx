@@ -2,7 +2,7 @@ import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
 import { useDisconnect } from "@reown/appkit/react";
 
 export default function WalletConnect() {
-  const { account, isConnected } = useAppKitAccount();
+  const { address, isConnected } = useAppKitAccount();
   const { disconnect } = useDisconnect();
   const { open } = useAppKit();
 
@@ -10,8 +10,8 @@ export default function WalletConnect() {
     return (
       <div className="wallet-connected">
         <p>
-          Connected: {account?.address?.slice(0, 6)}...
-          {account?.address?.slice(-4)}
+          Connected: {address?.slice(0, 6)}...
+          {address?.slice(-4)}
         </p>
         <button onClick={() => disconnect()}>Disconnect</button>
       </div>
