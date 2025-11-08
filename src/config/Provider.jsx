@@ -38,6 +38,7 @@ createAppKit({
   metadata,
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration
+    connectMethodsOrder: ["social", "email", "wallet"],
   },
   enableNetworkSwitch: true,
   enableReconnect: true,
