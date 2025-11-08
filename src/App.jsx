@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import WalletConnect from "./components/WalletConnect";
 import Dashboard from "./components/Dashboard";
 import MintVampire from "./components/MintVampire";
@@ -33,11 +32,13 @@ function App() {
 
   if (!isConnected) {
     return (
-      <div className="app">
-        <div className="container">
-          <header className="header">
-            <h1 className="title">🧛 Blood Covenant</h1>
-            <p className="subtitle">Enter the dark world of vampires</p>
+      <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a]">
+        <div className="max-w-6xl mx-auto px-8 py-8">
+          <header className="text-center mb-12">
+            <h1 className="text-5xl mb-2 bg-gradient-to-r from-[#8b0000] to-[#ff0000] bg-clip-text text-transparent">
+              🧛 Blood Covenant
+            </h1>
+            <p className="text-xl text-[#b0b0b0]">Enter the dark world of vampires</p>
           </header>
           <WalletConnect />
         </div>
@@ -47,9 +48,9 @@ function App() {
 
   if (loading) {
     return (
-      <div className="app">
-        <div className="container">
-          <div className="loading">Loading your vampire...</div>
+      <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a]">
+        <div className="max-w-6xl mx-auto px-8 py-8">
+          <div className="text-center py-12 text-xl text-[#b0b0b0]">Loading your vampire...</div>
         </div>
       </div>
     );
@@ -57,11 +58,13 @@ function App() {
 
   if (!vampire) {
     return (
-      <div className="app">
-        <div className="container">
-          <header className="header">
-            <h1 className="title">🧛 Blood Covenant</h1>
-            <p className="subtitle">Create your vampire</p>
+      <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a]">
+        <div className="max-w-6xl mx-auto px-8 py-8">
+          <header className="text-center mb-12">
+            <h1 className="text-5xl mb-2 bg-gradient-to-r from-[#8b0000] to-[#ff0000] bg-clip-text text-transparent">
+              🧛 Blood Covenant
+            </h1>
+            <p className="text-xl text-[#b0b0b0]">Create your vampire</p>
           </header>
           <MintVampire onMint={loadVampire} />
         </div>
@@ -70,8 +73,8 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <div className="container">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a]">
+      <div className="max-w-6xl mx-auto px-8 py-8">
         <Dashboard vampire={vampire} onUpdate={loadVampire} />
       </div>
     </div>
