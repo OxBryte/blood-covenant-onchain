@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAppKitAccount } from '@reown/appkit/react'
 import { mintVampire } from '../services/api'
 
 export default function MintVampire({ onMint }) {
-  const { address } = useAccount()
+  const { address } = useAppKitAccount()
   const [referrerCode, setReferrerCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
