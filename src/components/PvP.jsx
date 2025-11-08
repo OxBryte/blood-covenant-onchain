@@ -44,66 +44,74 @@ export default function PvP({ vampire, onUpdate }) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Arena</h2>
-      <p className="text-[#b0b0b0] mb-8">Challenge other vampires to duels. Winner takes 80% of the stake!</p>
+      <div className="text-center mb-10">
+        <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+          ⚔️ Arena
+        </h2>
+        <p className="text-gray-400 text-lg font-medium">Challenge other vampires to duels. Winner takes 80% of the stake!</p>
+      </div>
 
-      <form onSubmit={handleChallenge} className="mb-8">
-        <div className="mb-6">
-          <label htmlFor="opponent" className="block mb-2 font-semibold">
-            Opponent Wallet Address
-          </label>
-          <input
-            type="text"
-            id="opponent"
-            value={opponentAddress}
-            onChange={(e) => setOpponentAddress(e.target.value)}
-            placeholder="0x..."
-            className="w-full px-3 py-3 bg-[#0a0a0a] border border-[#333333] rounded-lg text-white text-base focus:outline-none focus:border-[#8b0000]"
-            required
-          />
-        </div>
+      <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 shadow-xl mb-10">
+        <form onSubmit={handleChallenge}>
+          <div className="mb-6">
+            <label htmlFor="opponent" className="block mb-3 font-bold text-gray-300">
+              Opponent Wallet Address
+            </label>
+            <input
+              type="text"
+              id="opponent"
+              value={opponentAddress}
+              onChange={(e) => setOpponentAddress(e.target.value)}
+              placeholder="0x..."
+              className="w-full px-5 py-4 bg-gradient-to-br from-gray-900 to-black border-2 border-gray-700/50 rounded-xl text-white text-base focus:outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30 transition-all duration-300"
+              required
+            />
+          </div>
 
-        <div className="mb-6">
-          <label htmlFor="stake" className="block mb-2 font-semibold">
-            Stake Amount (ETH)
-          </label>
-          <input
-            type="number"
-            id="stake"
-            value={stakeAmount}
-            onChange={(e) => setStakeAmount(parseFloat(e.target.value))}
-            min="0.0001"
-            step="0.0001"
-            className="w-full px-3 py-3 bg-[#0a0a0a] border border-[#333333] rounded-lg text-white text-base focus:outline-none focus:border-[#8b0000]"
-            required
-          />
-        </div>
+          <div className="mb-6">
+            <label htmlFor="stake" className="block mb-3 font-bold text-gray-300">
+              Stake Amount (ETH)
+            </label>
+            <input
+              type="number"
+              id="stake"
+              value={stakeAmount}
+              onChange={(e) => setStakeAmount(parseFloat(e.target.value))}
+              min="0.0001"
+              step="0.0001"
+              className="w-full px-5 py-4 bg-gradient-to-br from-gray-900 to-black border-2 border-gray-700/50 rounded-xl text-white text-base focus:outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30 transition-all duration-300"
+              required
+            />
+          </div>
 
-        <button 
-          type="submit" 
-          className="px-6 py-3 bg-[#8b0000] text-white border-none rounded-lg text-base cursor-pointer transition-all font-semibold hover:bg-[#a00000] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-          disabled={loading}
-        >
-          {loading ? 'Challenging...' : 'Challenge Vampire'}
-        </button>
-      </form>
+          <button 
+            type="submit" 
+            className="w-full px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white border-2 border-red-500/50 rounded-xl text-lg font-extrabold cursor-pointer transition-all duration-300 hover:from-red-700 hover:to-red-800 hover:scale-105 hover:shadow-xl hover:shadow-red-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none shadow-lg"
+            disabled={loading}
+          >
+            {loading ? '⚔️ Challenging...' : '⚔️ Challenge Vampire'}
+          </button>
+        </form>
+      </div>
 
       <div className="mt-8">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold">Top Vampires</h3>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-extrabold bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+            Top Vampires
+          </h3>
           <button 
             onClick={loadLeaderboard} 
-            className="px-6 py-3 bg-[#2a2a2a] text-white border border-[#333333] rounded-lg font-semibold hover:bg-[#333333] transition-colors"
+            className="px-6 py-3 bg-gradient-to-r from-gray-800/50 to-gray-900/50 border border-gray-700/50 rounded-xl font-semibold hover:from-gray-700/50 hover:to-gray-800/50 hover:scale-105 transition-all duration-300 shadow-lg"
           >
-            Refresh Leaderboard
+            Refresh
           </button>
         </div>
-        <div className="flex flex-col gap-2 mt-4">
+        <div className="flex flex-col gap-3">
           {leaderboard.map((vamp, index) => (
-            <div key={index} className="flex justify-between items-center px-4 py-4 bg-[#2a2a2a] rounded-lg border border-[#333333]">
-              <span className="font-semibold">#{index + 1}</span>
-              <span>{vamp.walletAddress.slice(0, 6)}...{vamp.walletAddress.slice(-4)}</span>
-              <span className="font-bold">{vamp.earnings.total.toFixed(4)} ETH</span>
+            <div key={index} className="flex justify-between items-center px-6 py-4 bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl border border-gray-700/50 shadow-lg card-hover">
+              <span className="font-extrabold text-xl bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">#{index + 1}</span>
+              <span className="text-gray-300 font-medium">{vamp.walletAddress.slice(0, 6)}...{vamp.walletAddress.slice(-4)}</span>
+              <span className="font-extrabold text-lg bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">{vamp.earnings.total.toFixed(4)} ETH</span>
             </div>
           ))}
         </div>
