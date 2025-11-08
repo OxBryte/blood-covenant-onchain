@@ -21,40 +21,46 @@ export default function Leaderboard() {
     }
   }
 
-  if (loading) return <div className="text-center py-12 text-xl text-[#b0b0b0]">Loading leaderboard...</div>
+  if (loading) return <div className="text-center py-12 text-xl text-gray-400">Loading leaderboard...</div>
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold">🏆 Leaderboard</h2>
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-4xl font-extrabold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+          🏆 Leaderboard
+        </h2>
         <button 
           onClick={loadLeaderboard} 
-          className="px-6 py-3 bg-[#2a2a2a] text-white border border-[#333333] rounded-lg font-semibold hover:bg-[#333333] transition-colors"
+          className="px-6 py-3 bg-gradient-to-r from-gray-800/50 to-gray-900/50 border border-gray-700/50 rounded-xl font-semibold hover:from-gray-700/50 hover:to-gray-800/50 hover:scale-105 transition-all duration-300 shadow-lg"
         >
           Refresh
         </button>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="grid grid-cols-[60px_1fr_150px_150px_120px] gap-4 px-4 py-4 bg-[#2a2a2a] rounded-lg font-semibold border border-[#333333]">
-          <span>Rank</span>
-          <span>Address</span>
-          <span>Rank</span>
-          <span>Total Earnings</span>
-          <span>Bloodline Size</span>
+      <div className="flex flex-col gap-3">
+        <div className="grid grid-cols-[80px_1fr_150px_150px_120px] gap-4 px-6 py-4 bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl font-extrabold border border-gray-700/50 shadow-lg">
+          <span className="text-gray-400">Rank</span>
+          <span className="text-gray-400">Address</span>
+          <span className="text-gray-400">Rank</span>
+          <span className="text-gray-400">Total Earnings</span>
+          <span className="text-gray-400">Bloodline Size</span>
         </div>
         {leaderboard.map((vamp, index) => (
           <div 
             key={index} 
-            className="grid grid-cols-[60px_1fr_150px_150px_120px] gap-4 px-4 py-4 bg-[#2a2a2a] rounded-lg border border-[#333333] transition-all hover:bg-[#333333] hover:translate-x-1"
+            className="grid grid-cols-[80px_1fr_150px_150px_120px] gap-4 px-6 py-4 bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl border border-gray-700/50 shadow-lg card-hover transition-all duration-300"
           >
-            <span className="font-semibold">#{index + 1}</span>
-            <span>{vamp.walletAddress.slice(0, 8)}...{vamp.walletAddress.slice(-6)}</span>
-            <span className="inline-block px-2 py-1 bg-[#8b0000] rounded-lg text-xs font-semibold w-fit">
+            <span className="font-extrabold text-xl bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+              #{index + 1}
+            </span>
+            <span className="text-gray-300 font-medium">{vamp.walletAddress.slice(0, 8)}...{vamp.walletAddress.slice(-6)}</span>
+            <span className="inline-block px-3 py-1 bg-gradient-to-r from-red-700 to-red-800 rounded-lg text-xs font-bold w-fit border border-red-600/50 shadow-lg shadow-red-900/30">
               {vamp.rank}
             </span>
-            <span className="font-semibold">{vamp.earnings.total.toFixed(4)} ETH</span>
-            <span>{vamp.totalBloodline}</span>
+            <span className="font-extrabold text-lg bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
+              {vamp.earnings.total.toFixed(4)} ETH
+            </span>
+            <span className="text-gray-300 font-semibold">{vamp.totalBloodline}</span>
           </div>
         ))}
       </div>
