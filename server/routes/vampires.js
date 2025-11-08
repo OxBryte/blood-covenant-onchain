@@ -10,6 +10,14 @@ const router = express.Router();
 // Create/Mint a new vampire
 router.post('/mint', async (req, res) => {
   try {
+    // Check if database is connected before proceeding
+    if (!isDBConnected()) {
+      return res.status(503).json({ 
+        error: 'Database is not connected. Please ensure MongoDB is running and try again.',
+        details: 'The server is running but cannot connect to MongoDB. Please check your MongoDB installation and connection settings.'
+      });
+    }
+
     const { walletAddress, referrerCode } = req.body;
 
     if (!walletAddress) {

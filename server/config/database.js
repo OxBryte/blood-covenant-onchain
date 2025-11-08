@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/blood-covenant';
+const MONGODB_URI =
+  import.meta.env.VITE_MONGODB_URI || "mongodb://localhost:27017/blood-covenant";
 
 let isConnected = false;
 let connectionAttempts = 0;
@@ -18,44 +19,54 @@ export const connectDB = async () => {
     await mongoose.connect(MONGODB_URI, options);
     isConnected = true;
     connectionAttempts = 0;
-    console.log('✅ MongoDB connected successfully');
+    console.log("✅ MongoDB connected successfully");
     console.log(`   Database: ${mongoose.connection.name}`);
-    console.log(`   Host: ${mongoose.connection.host}:${mongoose.connection.port}`);
+    console.log(
+      `   Host: ${mongoose.connection.host}:${mongoose.connection.port}`
+    );
   } catch (error) {
     isConnected = false;
     connectionAttempts++;
-    
-    console.error('❌ MongoDB connection error:');
+
+    console.error("❌ MongoDB connection error:");
     console.error(`   Error: ${error.message}`);
     console.error(`   Attempt: ${connectionAttempts}/${MAX_RETRIES}`);
-    
+
     if (connectionAttempts < MAX_RETRIES) {
       console.log(`   Retrying in ${RETRY_DELAY / 1000} seconds...`);
       setTimeout(() => {
         connectDB();
       }, RETRY_DELAY);
     } else {
-      console.error('❌ Failed to connect to MongoDB after multiple attempts');
-      console.error('   Please ensure MongoDB is running:');
-      console.error('   - Install MongoDB: https://www.mongodb.com/try/download/community');
-      console.error('   - Start MongoDB: mongod (or brew services start mongodb-community)');
-      console.error('   - Or use MongoDB Atlas: https://www.mongodb.com/cloud/atlas');
-      console.error('');
-      console.error('   Server will continue but database operations will fail.');
-      console.error('   The server will attempt to reconnect automatically.');
+      console.error("❌ Failed to connect to MongoDB after multiple attempts");
+      console.error("   Please ensure MongoDB is running:");
+      console.error(
+        "   - Install MongoDB: https://www.mongodb.com/try/download/community"
+      );
+      console.error(
+        "   - Start MongoDB: mongod (or brew services start mongodb-community)"
+      );
+      console.error(
+        "   - Or use MongoDB Atlas: https://www.mongodb.com/cloud/atlas"
+      );
+      console.error("");
+      console.error(
+        "   Server will continue but database operations will fail."
+      );
+      console.error("   The server will attempt to reconnect automatically.");
     }
   }
 };
 
 // Handle connection events
-mongoose.connection.on('connected', () => {
+mongoose.connection.on("connected", () => {
   isConnected = true;
-  console.log('✅ MongoDB reconnected');
+  console.log("✅ MongoDB reconnected");
 });
 
-mongoose.connection.on('disconnected', () => {
+mongoose.connection.on("disconnected", () => {
   isConnected = false;
-  console.log('⚠️  MongoDB disconnected - attempting to reconnect...');
+  console.log("⚠️  MongoDB disconnected - attempting to reconnect...");
   // Try to reconnect after a delay
   setTimeout(() => {
     if (!isConnected) {
@@ -64,8 +75,8 @@ mongoose.connection.on('disconnected', () => {
   }, RETRY_DELAY);
 });
 
-mongoose.connection.on('error', (err) => {
-  console.error('❌ MongoDB error:', err.message);
+mongoose.connection.on("error", (err) => {
+  console.error("❌ MongoDB error:", err.message);
 });
 
 // Export connection status check
@@ -74,9 +85,8 @@ export const isDBConnected = () => {
 };
 
 // Graceful shutdown
-process.on('SIGINT', async () => {
+process.on("SIGINT", async () => {
   await mongoose.connection.close();
-  console.log('MongoDB connection closed through app termination');
+  console.log("MongoDB connection closed through app termination");
   process.exit(0);
 });
-
