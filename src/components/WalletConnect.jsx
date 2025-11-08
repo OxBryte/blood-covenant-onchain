@@ -24,15 +24,22 @@ export default function WalletConnect() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-[400px]">
-      <div className="text-center bg-[#1a1a1a] p-12 rounded-2xl border border-[#333333]">
-        <h2 className="text-2xl font-bold mb-4">Connect Your Wallet</h2>
-        <p className="mb-8 text-[#b0b0b0]">
-          Connect your wallet to enter the Blood Covenant
-        </p>
+    <div className="flex justify-center items-center min-h-[500px]">
+      <div className="text-center bg-gradient-to-br from-gray-800/90 via-gray-900/80 to-gray-800/90 backdrop-blur-md p-16 rounded-3xl border border-red-900/30 shadow-2xl shadow-red-900/20 max-w-md w-full">
+        <div className="mb-8">
+          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-red-700 via-red-800 to-red-900 flex items-center justify-center text-5xl shadow-lg shadow-red-900/50 border-4 border-red-600/50 animate-[float_3s_ease-in-out_infinite]">
+            🧛
+          </div>
+          <h2 className="text-3xl font-extrabold mb-4 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+            Connect Your Wallet
+          </h2>
+          <p className="text-gray-400 text-lg font-medium">
+            Connect your wallet to enter the Blood Covenant
+          </p>
+        </div>
         <button
           onClick={() => open()}
-          className="bg-gradient-to-r from-[#b31217] to-[#2d080a] text-white border-none rounded-lg px-7 py-3 text-lg font-bold cursor-pointer shadow-[0_4px_24px_rgba(179,18,23,0.18)] transition-all tracking-wide mt-6 hover:from-[#d72631] hover:to-[#641414] hover:-translate-y-0.5"
+          className="bg-gradient-to-r from-red-600 to-red-700 text-white border-2 border-red-500/50 rounded-xl px-10 py-4 text-lg font-extrabold cursor-pointer shadow-xl shadow-red-900/50 transition-all duration-300 tracking-wide hover:from-red-700 hover:to-red-800 hover:scale-105 hover:shadow-2xl hover:shadow-red-900/60"
         >
           🩸 Connect Wallet
         </button>
