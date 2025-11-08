@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import Vampire from '../models/Vampire.js';
 import Coven from '../models/Coven.js';
 import { generateReferralCode } from '../utils/helpers.js';
+import { isDBConnected } from '../config/database.js';
 
 const router = express.Router();
 
@@ -81,9 +82,9 @@ router.post('/mint', async (req, res) => {
     let errorDetails = null;
     
     // Check if MongoDB is connected
-    if (mongoose.connection.readyState !== 1) {
+    if (!isDBConnected() || mongoose.connection.readyState !== 1) {
       statusCode = 503;
-      errorMessage = 'Database connection error. Please ensure the database is running and try again.';
+      errorMessage = 'Database is not connected. Please ensure MongoDB is running and try again.';
     } else if (error.name === 'ValidationError') {
       statusCode = 400;
       errorMessage = 'Validation error: ' + Object.values(error.errors).map(e => e.message).join(', ');

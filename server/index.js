@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { connectDB } from './config/database.js';
+import { connectDB, isDBConnected } from './config/database.js';
 import vampireRoutes from './routes/vampires.js';
 import covenRoutes from './routes/covens.js';
 import huntRoutes from './routes/hunt.js';
@@ -16,8 +16,11 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB (non-blocking)
+connectDB().catch((error) => {
+  console.error('Initial MongoDB connection attempt failed:', error.message);
+  console.log('Server will start anyway and attempt to reconnect...');
+});
 
 // Routes
 app.use('/api/vampires', vampireRoutes);
@@ -27,10 +30,19 @@ app.use('/api/pvp', pvpRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Blood Covenant API is running' });
+  const dbStatus = isDBConnected();
+  res.json({ 
+    status: 'ok', 
+    message: 'Blood Covenant API is running',
+    database: dbStatus ? 'connected' : 'disconnected'
+  });
 });
 
 app.listen(PORT, () => {
   console.log(`🧛 Server running on port ${PORT}`);
+  console.log(`   Health check: http://localhost:${PORT}/api/health`);
+  if (!isDBConnected()) {
+    console.log('   ⚠️  Database not connected - some features may not work');
+  }
 });
 
