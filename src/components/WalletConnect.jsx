@@ -1,6 +1,5 @@
 import { useDisconnect } from 'wagmi'
 import { useAccount } from 'wagmi'
-import '@reown/appkit/styles'
 
 export default function WalletConnect() {
   const { address, isConnected } = useAccount()

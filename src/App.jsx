@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
-import { useQuery } from '@tanstack/react-query'
+import { useAccount } from 'wagmi'
 import './App.css'
 import WalletConnect from './components/WalletConnect'
 import Dashboard from './components/Dashboard'
