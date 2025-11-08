@@ -44,27 +44,29 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
     new Date() - new Date(vampire.lastHunt) > 24 * 60 * 60 * 1000;
 
   return (
-    <div className="hunting-grounds">
-      <h2>Hunting Grounds</h2>
-      <p>
+    <div>
+      <h2 className="text-2xl font-bold mb-4">Hunting Grounds</h2>
+      <p className="text-[#b0b0b0] mb-8">
         Stake tokens to hunt for 24 hours and earn rewards based on your
         vampire's power level.
       </p>
 
       {!canHunt && (
-        <div className="warning">
+        <div className="bg-orange-500/10 border border-orange-500 text-orange-500 p-4 rounded-lg mb-8">
           You are currently on a hunt. Come back in 24 hours.
         </div>
       )}
 
-      <form onSubmit={handleHunt} className="hunt-form">
-        <div className="form-group">
-          <label htmlFor="ground">Select Hunting Ground</label>
+      <form onSubmit={handleHunt} className="mb-8">
+        <div className="mb-6">
+          <label htmlFor="ground" className="block mb-2 font-semibold">
+            Select Hunting Ground
+          </label>
           <select
             id="ground"
             value={selectedGround}
             onChange={(e) => setSelectedGround(e.target.value)}
-            className="form-input"
+            className="w-full px-3 py-3 bg-[#0a0a0a] border border-[#333333] rounded-lg text-white text-base focus:outline-none focus:border-[#8b0000]"
             required
           >
             <option value="">Choose a ground...</option>
@@ -81,8 +83,10 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
           </select>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="stake">Stake Amount (ETH)</label>
+        <div className="mb-6">
+          <label htmlFor="stake" className="block mb-2 font-semibold">
+            Stake Amount (ETH)
+          </label>
           <input
             type="number"
             id="stake"
@@ -90,28 +94,30 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
             onChange={(e) => setStakeAmount(parseFloat(e.target.value))}
             min="0.0001"
             step="0.0001"
-            className="form-input"
+            className="w-full px-3 py-3 bg-[#0a0a0a] border border-[#333333] rounded-lg text-white text-base focus:outline-none focus:border-[#8b0000]"
             required
           />
         </div>
 
         <button
           type="submit"
-          className="btn btn-primary"
+          className="px-6 py-3 bg-[#8b0000] text-white border-none rounded-lg text-base cursor-pointer transition-all font-semibold hover:bg-[#a00000] hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           disabled={loading || !canHunt}
         >
           {loading ? "Starting Hunt..." : "Start Hunt"}
         </button>
       </form>
 
-      <div className="grounds-info">
-        <h3>Available Grounds</h3>
+      <div className="mt-8">
+        <h3 className="text-xl font-bold mb-4">Available Grounds</h3>
         {grounds.map((ground) => (
           <div
             key={ground.name}
-            className={`ground-card ${!ground.unlocked ? "locked" : ""}`}
+            className={`bg-[#2a2a2a] p-6 rounded-lg border border-[#333333] mb-4 ${
+              !ground.unlocked ? "opacity-50" : ""
+            }`}
           >
-            <h4>{ground.name}</h4>
+            <h4 className="text-lg font-bold mb-2">{ground.name}</h4>
             <p>Multiplier: {ground.multiplier}x</p>
             <p>Status: {ground.unlocked ? "Unlocked" : "Locked"}</p>
           </div>
