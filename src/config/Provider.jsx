@@ -39,6 +39,8 @@ createAppKit({
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration
   },
+  enableNetworkSwitch: true,
+  enableReconnect: true,
 });
 
 export function AppKitProvider({ children }) {

@@ -52,13 +52,14 @@ async function gitCommand(command, silent = false) {
     if (command.includes('status') && (error.code === 128 || error.code === 1)) {
       return { stdout: '', stderr: '' };
     }
-    // Git commit returns exit code 1 when there's nothing to commit
-    if (command.includes('commit') && error.code === 1) {
-      return { stdout: '', stderr: error.stderr || '' };
-    }
+    // For commit errors, preserve the error info so caller can check it
+    // Don't catch commit errors here - let the caller handle them
     if (!silent) {
       console.error(`Error executing: ${command}`, error.message);
     }
+    // Attach stderr and stdout to error object for better error handling
+    error.stderr = error.stderr || '';
+    error.stdout = error.stdout || '';
     throw error;
   }
 }
@@ -86,45 +87,59 @@ async function commitChanges() {
     // Properly escape the commit message for shell
     // Replace single quotes with '\'' and wrap in single quotes
     const escapedMessage = commitMessage.replace(/'/g, "'\\''");
-    const commitResult = await gitCommand(`git commit -m '${escapedMessage}'`, true);
+    
+    let commitResult;
+    try {
+      commitResult = await gitCommand(`git commit -m '${escapedMessage}'`, true);
+    } catch (error) {
+      // If commit fails, check if it's because there's nothing to commit
+      const errorMsg = (error.stderr || error.message || '').toLowerCase();
+      if (errorMsg.includes('nothing to commit') || errorMsg.includes('no changes added to commit')) {
+        console.log('ℹ️  No changes to commit (all changes may already be staged)\n');
+        hasChanges = false;
+        pendingChanges.clear();
+        return;
+      }
+      throw error;
+    }
     
     // Check if commit was successful by checking status after commit
     const statusAfter = await gitCommand('git status --porcelain', true);
-    const wasCommitted = !statusAfter.stdout || statusAfter.stdout.trim() === '';
+    const wasCommitted = !statusAfter || !statusAfter.stdout || statusAfter.stdout.trim() === '';
     
-    // Also check if commit result indicates success
-    const commitOutput = (commitResult.stdout + ' ' + commitResult.stderr).toLowerCase();
-    const commitSuccess = wasCommitted || 
-                         commitOutput.includes('[master') || 
-                         commitOutput.includes('[main') ||
-                         commitOutput.includes('files changed') ||
-                         commitOutput.includes('file changed');
+    // Also check commit output for success indicators
+    const commitOutput = ((commitResult.stdout || '') + ' ' + (commitResult.stderr || '')).toLowerCase();
+    const hasCommitIndicator = commitOutput.includes('[master') || 
+                               commitOutput.includes('[main') ||
+                               commitOutput.includes('files changed') ||
+                               commitOutput.includes('file changed') ||
+                               commitOutput.includes('insertion') ||
+                               commitOutput.includes('deletion');
     
-    if (commitSuccess && wasCommitted) {
+    if (wasCommitted || hasCommitIndicator) {
       console.log('✅ Changes committed successfully!');
       if (pendingChanges.size > 0) {
-        console.log(`   Files: ${Array.from(pendingChanges).join(', ')}`);
+        console.log(`   Files: ${Array.from(pendingChanges).slice(0, 10).join(', ')}`);
+        if (pendingChanges.size > 10) {
+          console.log(`   ... and ${pendingChanges.size - 10} more`);
+        }
       }
       console.log('');
-    } else if (!wasCommitted) {
-      // Still have uncommitted changes, might be an issue
-      console.log('⚠️  Some changes may not have been committed\n');
     } else {
-      console.log('ℹ️  No changes to commit\n');
+      // Check status one more time to be sure
+      const finalStatus = await gitCommand('git status --porcelain', true);
+      if (finalStatus && finalStatus.stdout && finalStatus.stdout.trim()) {
+        console.log('⚠️  Warning: Some changes may not have been committed\n');
+      } else {
+        console.log('✅ Changes committed successfully!\n');
+      }
     }
     
     hasChanges = false;
     pendingChanges.clear();
   } catch (error) {
-    // Check if error is just "nothing to commit"
-    if (error.message && error.message.includes('nothing to commit')) {
-      console.log('ℹ️  No changes to commit\n');
-      hasChanges = false;
-      pendingChanges.clear();
-    } else {
-      console.error('❌ Error committing changes:', error.message);
-      // Don't clear changes on error, allow retry
-    }
+    console.error('❌ Error committing changes:', error.message);
+    // Don't clear changes on error, allow retry on next change
   }
 }
 
@@ -145,21 +160,51 @@ function scheduleCommit(filePath) {
 // Initialize git repo if not already initialized
 async function initGit() {
   try {
-    await gitCommand('git status');
+    await gitCommand('git status', true);
+    
+    // Check if user config is set, set it if not
+    try {
+      const nameResult = await gitCommand('git config user.name', true);
+      if (!nameResult || !nameResult.stdout || !nameResult.stdout.trim()) {
+        throw new Error('user.name not set');
+      }
+    } catch (e) {
+      console.log('⚙️  Setting git user.name...');
+      try {
+        await gitCommand('git config user.name "Auto Committer"');
+      } catch (err) {
+        console.warn('⚠️  Could not set git user.name');
+      }
+    }
+    
+    try {
+      const emailResult = await gitCommand('git config user.email', true);
+      if (!emailResult || !emailResult.stdout || !emailResult.stdout.trim()) {
+        throw new Error('user.email not set');
+      }
+    } catch (e) {
+      console.log('⚙️  Setting git user.email...');
+      try {
+        await gitCommand('git config user.email "auto-commit@blood-covenant.local"');
+      } catch (err) {
+        console.warn('⚠️  Could not set git user.email');
+      }
+    }
+    
     console.log('✅ Git repository already initialized\n');
   } catch (error) {
     console.log('📦 Initializing git repository...');
     await gitCommand('git init');
-    // Try to set git config, but don't fail if it doesn't work
+    // Try to set git config
     try {
       await gitCommand('git config user.name "Auto Committer"');
     } catch (e) {
-      // Ignore config errors
+      console.warn('⚠️  Could not set git user.name');
     }
     try {
       await gitCommand('git config user.email "auto-commit@blood-covenant.local"');
     } catch (e) {
-      // Ignore config errors
+      console.warn('⚠️  Could not set git user.email');
     }
     console.log('✅ Git repository initialized\n');
   }
