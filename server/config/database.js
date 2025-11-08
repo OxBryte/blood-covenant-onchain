@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const MONGODB_URI =
-  import.meta.env.VITE_MONGODB_URI || "mongodb://localhost:27017/blood-covenant";
+  "mongodb+srv://silascyrax:tvBfANx5QBZQj8O8@cluster0.gyau4lx.mongodb.net/";
 
 let isConnected = false;
 let connectionAttempts = 0;
