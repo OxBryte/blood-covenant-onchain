@@ -1,35 +1,35 @@
-import { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
-import './App.css'
-import WalletConnect from './components/WalletConnect'
-import Dashboard from './components/Dashboard'
-import MintVampire from './components/MintVampire'
-import { fetchVampire } from './services/api'
+import { useState, useEffect } from "react";
+import "./App.css";
+import WalletConnect from "./components/WalletConnect";
+import Dashboard from "./components/Dashboard";
+import MintVampire from "./components/MintVampire";
+import { fetchVampire } from "./services/api";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 function App() {
-  const { address, isConnected } = useAccount()
-  const [vampire, setVampire] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const { address, isConnected } = useAppKitAccount();
+  const [vampire, setVampire] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isConnected && address) {
-      loadVampire()
+      loadVampire();
     }
-  }, [isConnected, address])
+  }, [isConnected, address]);
 
   const loadVampire = async () => {
-    if (!address) return
-    setLoading(true)
+    if (!address) return;
+    setLoading(true);
     try {
-      const data = await fetchVampire(address)
-      setVampire(data)
+      const data = await fetchVampire(address);
+      setVampire(data);
     } catch (error) {
-      console.error('Error loading vampire:', error)
-      setVampire(null)
+      console.error("Error loading vampire:", error);
+      setVampire(null);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (!isConnected) {
     return (
@@ -42,7 +42,7 @@ function App() {
           <WalletConnect />
         </div>
       </div>
-    )
+    );
   }
 
   if (loading) {
@@ -52,7 +52,7 @@ function App() {
           <div className="loading">Loading your vampire...</div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!vampire) {
@@ -66,7 +66,7 @@ function App() {
           <MintVampire onMint={loadVampire} />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -75,7 +75,7 @@ function App() {
         <Dashboard vampire={vampire} onUpdate={loadVampire} />
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
