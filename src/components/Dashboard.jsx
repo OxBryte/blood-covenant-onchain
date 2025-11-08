@@ -22,34 +22,36 @@ export default function Dashboard({ vampire, onUpdate }) {
 
   return (
     <div className="min-h-screen">
-      <header className="flex justify-between items-center mb-8 pb-4 border-b border-[#333333]">
-        <h1 className="text-3xl font-bold">🧛 Blood Covenant</h1>
+      <header className="flex justify-between items-center mb-10 pb-6 border-b border-gradient-to-r from-transparent via-red-900/30 to-transparent">
+        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-red-600 via-red-700 to-red-800 bg-clip-text text-transparent">
+          🧛 Blood Covenant
+        </h1>
         <div 
-          className="cursor-pointer px-4 py-2 bg-[#1a1a1a] border border-[#333333] rounded-lg hover:bg-[#2a2a2a] transition-colors"
+          className="cursor-pointer px-5 py-2.5 bg-gradient-to-r from-red-900/20 to-red-800/20 border border-red-900/50 rounded-xl hover:from-red-900/30 hover:to-red-800/30 hover:border-red-700/50 transition-all duration-300 shadow-lg shadow-red-900/20"
           onClick={() => open()}
         >
-          {address?.slice(0, 6)}...{address?.slice(-4)}
+          <span className="text-sm font-semibold">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
         </div>
       </header>
 
-      <nav className="flex gap-4 mb-8 flex-wrap">
+      <nav className="flex gap-3 mb-10 flex-wrap">
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] border rounded-lg text-white cursor-pointer transition-all ${
+            className={`flex items-center gap-2.5 px-6 py-3 rounded-xl text-white cursor-pointer transition-all duration-300 font-semibold ${
               activeTab === tab.id
-                ? "bg-[#8b0000] border-[#8b0000]"
-                : "border-[#333333] hover:bg-[#2a2a2a]"
+                ? "bg-gradient-to-r from-red-700 to-red-800 shadow-lg shadow-red-900/50 scale-105"
+                : "bg-gradient-to-r from-gray-800/50 to-gray-900/50 border border-gray-700/50 hover:from-gray-700/50 hover:to-gray-800/50 hover:scale-105 hover:shadow-lg hover:shadow-red-900/20"
             }`}
             onClick={() => setActiveTab(tab.id)}
           >
-            <span>{tab.icon}</span>
+            <span className="text-lg">{tab.icon}</span>
             <span>{tab.label}</span>
           </button>
         ))}
       </nav>
 
-      <main className="bg-[#1a1a1a] p-8 rounded-2xl border border-[#333333] min-h-[400px]">
+      <main className="bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-gray-900/80 backdrop-blur-sm p-10 rounded-3xl border border-gray-700/50 min-h-[500px] shadow-2xl shadow-black/50">
         {activeTab === "profile" && (
           <VampireProfile vampire={vampire} onUpdate={onUpdate} />
         )}

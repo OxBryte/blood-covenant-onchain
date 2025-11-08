@@ -23,7 +23,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--color-bg-dark);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%);
+  background-attachment: fixed;
   color: var(--color-text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -42,4 +43,29 @@ body {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 0, 0, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(139, 0, 0, 0.5); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.glass-effect {
+  background: rgba(26, 26, 26, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(139, 0, 0, 0.2);
 }
