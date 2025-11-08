@@ -4,7 +4,7 @@ import { useDisconnect } from "@reown/appkit/react";
 export default function WalletConnect() {
   const { account, isConnected } = useAppKitAccount();
   const { disconnect } = useDisconnect();
-  const { open, close } = useAppKit();
+  const { open } = useAppKit();
 
   if (isConnected) {
     return (
