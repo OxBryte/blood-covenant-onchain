@@ -416,12 +416,27 @@ body {
 }
 
 .error-message {
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid var(--error);
-  color: var(--error);
-  padding: 0.75rem;
+  background: rgba(255, 0, 0, 0.15);
+  border: 2px solid #ff4444;
+  color: #ff0000;
+  padding: 1rem;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  animation: shake 0.3s ease-in-out;
+}
+
+.error-message strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
 /* Hunting Grounds */

@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import Vampire from '../models/Vampire.js';
 import Coven from '../models/Coven.js';
 import { generateReferralCode } from '../utils/helpers.js';
@@ -72,7 +73,49 @@ router.post('/mint', async (req, res) => {
     res.json({ vampire, isNew: true });
   } catch (error) {
     console.error('Error minting vampire:', error);
-    res.status(500).json({ error: 'Failed to mint vampire' });
+    console.error('Error stack:', error.stack);
+    
+    // Handle specific error types
+    let statusCode = 500;
+    let errorMessage = 'Failed to mint vampire';
+    let errorDetails = null;
+    
+    // Check if MongoDB is connected
+    if (mongoose.connection.readyState !== 1) {
+      statusCode = 503;
+      errorMessage = 'Database connection error. Please ensure the database is running and try again.';
+    } else if (error.name === 'ValidationError') {
+      statusCode = 400;
+      errorMessage = 'Validation error: ' + Object.values(error.errors).map(e => e.message).join(', ');
+      errorDetails = error.errors;
+    } else if (error.code === 11000) {
+      // MongoDB duplicate key error
+      statusCode = 409;
+      const field = Object.keys(error.keyPattern)[0];
+      if (field === 'walletAddress') {
+        errorMessage = 'You already have a vampire with this wallet address!';
+      } else if (field === 'referralCode') {
+        errorMessage = 'A vampire with this referral code already exists (this should not happen).';
+      } else {
+        errorMessage = `A vampire with this ${field} already exists`;
+      }
+    } else if (error.name === 'MongoServerError' || error.name === 'MongooseError') {
+      statusCode = 500;
+      errorMessage = 'Database error occurred. Please try again.';
+      errorDetails = process.env.NODE_ENV === 'development' ? error.message : null;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    res.status(statusCode).json({ 
+      error: errorMessage,
+      details: errorDetails,
+      ...(process.env.NODE_ENV === 'development' && { 
+        stack: error.stack,
+        errorName: error.name,
+        errorCode: error.code 
+      })
+    });
   }
 });
 

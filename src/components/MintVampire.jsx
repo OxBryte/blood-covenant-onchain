@@ -10,7 +10,10 @@ export default function MintVampire({ onMint }) {
 
   const handleMint = async (e) => {
     e.preventDefault()
-    if (!address) return
+    if (!address) {
+      setError('Please connect your wallet first')
+      return
+    }
 
     setLoading(true)
     setError('')
@@ -19,9 +22,33 @@ export default function MintVampire({ onMint }) {
       const result = await mintVampire(address, referrerCode || undefined)
       if (result.vampire) {
         onMint()
+      } else {
+        setError('Failed to create vampire. Please try again.')
       }
     } catch (err) {
-      setError(err.message || 'Failed to mint vampire')
+      // Provide user-friendly error messages
+      let errorMessage = 'Failed to mint vampire';
+      
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.status === 400) {
+        errorMessage = 'Invalid request. Please check your input.';
+      } else if (err.status === 409) {
+        errorMessage = 'You already have a vampire!';
+      } else if (err.status === 503) {
+        errorMessage = 'Database connection error. Please ensure the database is running.';
+      } else if (err.status === 500) {
+        errorMessage = 'Server error. Please try again later.';
+      } else if (err.message?.includes('connect to server') || err.message?.includes('fetch')) {
+        errorMessage = 'Cannot connect to server. Please make sure the server is running on port 3001.';
+      }
+      
+      console.error('Mint error details:', {
+        message: err.message,
+        status: err.status,
+        error: err
+      });
+      setError(errorMessage);
     } finally {
       setLoading(false)
     }
@@ -47,7 +74,11 @@ export default function MintVampire({ onMint }) {
             <small>If you were referred by another vampire, enter their code here</small>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className="error-message" role="alert">
+              <strong>Error:</strong> {error}
+            </div>
+          )}
 
           <button 
             type="submit" 

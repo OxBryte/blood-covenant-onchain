@@ -1,20 +1,52 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 async function fetchAPI(endpoint, options = {}) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  })
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    })
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Request failed' }))
-    throw new Error(error.error || 'Request failed')
+    if (!response.ok) {
+      let errorMessage = 'Request failed';
+      let errorDetails = null;
+      
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorData.message || errorMessage;
+        errorDetails = errorData.details || null;
+      } catch (e) {
+        // If response is not JSON, try to get text
+        try {
+          const text = await response.text();
+          errorMessage = text || `Server error: ${response.status} ${response.statusText}`;
+        } catch (e2) {
+          errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        }
+      }
+      
+      const error = new Error(errorMessage);
+      error.status = response.status;
+      error.details = errorDetails;
+      throw error;
+    }
+
+    return response.json()
+  } catch (error) {
+    // Handle network errors
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Unable to connect to server. Please make sure the server is running on ' + API_URL);
+    }
+    // Re-throw if it's already our formatted error
+    if (error.status) {
+      throw error;
+    }
+    // Handle other errors
+    throw new Error(error.message || 'An unexpected error occurred');
   }
-
-  return response.json()
 }
 
 export async function mintVampire(walletAddress, referrerCode) {
