@@ -36,28 +36,37 @@ let changeTimer = null;
 let hasChanges = false;
 let pendingChanges = new Set();
 
-async function gitCommand(command) {
+async function gitCommand(command, silent = false) {
   try {
     const { stdout, stderr } = await execAsync(command, {
       cwd: projectRoot,
+      maxBuffer: 1024 * 1024 * 10, // 10MB buffer
     });
-    if (stdout) console.log(stdout.trim());
-    if (stderr && !stderr.includes('warning')) console.error(stderr.trim());
-    return { stdout, stderr };
+    if (!silent) {
+      if (stdout && stdout.trim()) console.log(stdout.trim());
+      if (stderr && !stderr.includes('warning') && stderr.trim()) console.error(stderr.trim());
+    }
+    return { stdout: stdout || '', stderr: stderr || '' };
   } catch (error) {
-    // Ignore errors for git status checks
-    if (command.includes('status') && error.code === 128) {
+    // Ignore errors for git status checks (no repo or no changes)
+    if (command.includes('status') && (error.code === 128 || error.code === 1)) {
       return { stdout: '', stderr: '' };
     }
-    console.error(`Error executing: ${command}`, error.message);
-    return null;
+    // Git commit returns exit code 1 when there's nothing to commit
+    if (command.includes('commit') && error.code === 1) {
+      return { stdout: '', stderr: error.stderr || '' };
+    }
+    if (!silent) {
+      console.error(`Error executing: ${command}`, error.message);
+    }
+    throw error;
   }
 }
 
 async function commitChanges() {
   try {
     // Check if there are changes
-    const statusResult = await gitCommand('git status --porcelain');
+    const statusResult = await gitCommand('git status --porcelain', true);
     if (!statusResult || !statusResult.stdout || !statusResult.stdout.trim()) {
       hasChanges = false;
       pendingChanges.clear();
@@ -67,23 +76,39 @@ async function commitChanges() {
     console.log('\n📦 Auto-committing changes...');
     
     // Add all changes
-    const addResult = await gitCommand('git add -A');
-    if (!addResult) {
-      console.error('❌ Failed to add changes to git');
-      return;
-    }
+    await gitCommand('git add -A', true);
 
     // Create commit with timestamp and file list
     const timestamp = new Date().toLocaleString();
     const filesChanged = Array.from(pendingChanges).slice(0, 5).join(', ');
     const commitMessage = `Auto-commit: ${timestamp}${filesChanged ? ` - ${filesChanged}` : ''}`;
-    // Escape quotes in commit message
-    const escapedMessage = commitMessage.replace(/"/g, '\\"');
-    const commitResult = await gitCommand(`git commit -m "${escapedMessage}"`);
     
-    if (commitResult && commitResult.stdout) {
+    // Properly escape the commit message for shell
+    // Replace single quotes with '\'' and wrap in single quotes
+    const escapedMessage = commitMessage.replace(/'/g, "'\\''");
+    const commitResult = await gitCommand(`git commit -m '${escapedMessage}'`, true);
+    
+    // Check if commit was successful by checking status after commit
+    const statusAfter = await gitCommand('git status --porcelain', true);
+    const wasCommitted = !statusAfter.stdout || statusAfter.stdout.trim() === '';
+    
+    // Also check if commit result indicates success
+    const commitOutput = (commitResult.stdout + ' ' + commitResult.stderr).toLowerCase();
+    const commitSuccess = wasCommitted || 
+                         commitOutput.includes('[master') || 
+                         commitOutput.includes('[main') ||
+                         commitOutput.includes('files changed') ||
+                         commitOutput.includes('file changed');
+    
+    if (commitSuccess && wasCommitted) {
       console.log('✅ Changes committed successfully!');
-      console.log(`   Files: ${Array.from(pendingChanges).join(', ')}\n`);
+      if (pendingChanges.size > 0) {
+        console.log(`   Files: ${Array.from(pendingChanges).join(', ')}`);
+      }
+      console.log('');
+    } else if (!wasCommitted) {
+      // Still have uncommitted changes, might be an issue
+      console.log('⚠️  Some changes may not have been committed\n');
     } else {
       console.log('ℹ️  No changes to commit\n');
     }
@@ -91,8 +116,15 @@ async function commitChanges() {
     hasChanges = false;
     pendingChanges.clear();
   } catch (error) {
-    console.error('❌ Error committing changes:', error.message);
-    // Don't clear changes on error, allow retry
+    // Check if error is just "nothing to commit"
+    if (error.message && error.message.includes('nothing to commit')) {
+      console.log('ℹ️  No changes to commit\n');
+      hasChanges = false;
+      pendingChanges.clear();
+    } else {
+      console.error('❌ Error committing changes:', error.message);
+      // Don't clear changes on error, allow retry
+    }
   }
 }
 
