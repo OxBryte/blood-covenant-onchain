@@ -1,19 +1,21 @@
-import { useDisconnect } from 'wagmi'
-import { useAccount } from 'wagmi'
+import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
+import { useDisconnect } from "@reown/appkit/react";
 
 export default function WalletConnect() {
-  const { address, isConnected } = useAccount()
-  const { disconnect } = useDisconnect()
+  const { account, isConnected } = useAppKitAccount();
+  const { disconnect } = useDisconnect();
+  const { open, close } = useAppKit();
 
   if (isConnected) {
     return (
       <div className="wallet-connected">
-        <p>Connected: {address?.slice(0, 6)}...{address?.slice(-4)}</p>
-        <button onClick={() => disconnect()} className="btn btn-secondary">
-          Disconnect
-        </button>
+        <p>
+          Connected: {account?.address?.slice(0, 6)}...
+          {account?.address?.slice(-4)}
+        </p>
+        <button onClick={() => disconnect()}>Disconnect</button>
       </div>
-    )
+    );
   }
 
   return (
@@ -21,11 +23,8 @@ export default function WalletConnect() {
       <div className="wallet-connect-content">
         <h2>Connect Your Wallet</h2>
         <p>Connect your wallet to enter the Blood Covenant</p>
-        <div style={{ marginTop: '2rem' }}>
-          <w3m-button />
-        </div>
+        <button onClick={() => open()}>Connect Wallet</button>
       </div>
     </div>
-  )
+  );
 }
-

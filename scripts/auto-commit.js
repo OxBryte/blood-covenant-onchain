@@ -55,34 +55,44 @@ async function gitCommand(command) {
 }
 
 async function commitChanges() {
-  if (!hasChanges && pendingChanges.size === 0) return;
-
   try {
-    console.log('\n📦 Auto-committing changes...');
-    
     // Check if there are changes
-    const { stdout: status } = await gitCommand('git status --porcelain');
-    if (!status || !status.trim()) {
+    const statusResult = await gitCommand('git status --porcelain');
+    if (!statusResult || !statusResult.stdout || !statusResult.stdout.trim()) {
       hasChanges = false;
       pendingChanges.clear();
       return;
     }
 
+    console.log('\n📦 Auto-committing changes...');
+    
     // Add all changes
-    await gitCommand('git add -A');
+    const addResult = await gitCommand('git add -A');
+    if (!addResult) {
+      console.error('❌ Failed to add changes to git');
+      return;
+    }
 
     // Create commit with timestamp and file list
     const timestamp = new Date().toLocaleString();
     const filesChanged = Array.from(pendingChanges).slice(0, 5).join(', ');
     const commitMessage = `Auto-commit: ${timestamp}${filesChanged ? ` - ${filesChanged}` : ''}`;
-    await gitCommand(`git commit -m "${commitMessage}"`);
-
-    console.log('✅ Changes committed successfully!');
-    console.log(`   Files: ${Array.from(pendingChanges).join(', ')}\n`);
+    // Escape quotes in commit message
+    const escapedMessage = commitMessage.replace(/"/g, '\\"');
+    const commitResult = await gitCommand(`git commit -m "${escapedMessage}"`);
+    
+    if (commitResult && commitResult.stdout) {
+      console.log('✅ Changes committed successfully!');
+      console.log(`   Files: ${Array.from(pendingChanges).join(', ')}\n`);
+    } else {
+      console.log('ℹ️  No changes to commit\n');
+    }
+    
     hasChanges = false;
     pendingChanges.clear();
   } catch (error) {
     console.error('❌ Error committing changes:', error.message);
+    // Don't clear changes on error, allow retry
   }
 }
 
@@ -110,8 +120,12 @@ async function initGit() {
     await gitCommand('git init');
     // Try to set git config, but don't fail if it doesn't work
     try {
-      await gitCommand('git config user.name "Auto Committer" || true');
-      await gitCommand('git config user.email "auto-commit@blood-covenant.local" || true');
+      await gitCommand('git config user.name "Auto Committer"');
+    } catch (e) {
+      // Ignore config errors
+    }
+    try {
+      await gitCommand('git config user.email "auto-commit@blood-covenant.local"');
     } catch (e) {
       // Ignore config errors
     }
@@ -154,24 +168,44 @@ function startWatching() {
 
 // Main function
 async function main() {
-  console.log('🚀 Starting auto-commit system for Blood Covenant...\n');
-  await initGit();
-  startWatching();
-  
-  // Initial commit if there are uncommitted changes
-  setTimeout(() => {
-    commitChanges();
-  }, 5000);
-
-  // Keep the process running
-  process.on('SIGINT', () => {
-    console.log('\n\n🛑 Stopping auto-commit system...');
-    if (changeTimer) {
-      clearTimeout(changeTimer);
+  try {
+    console.log('🚀 Starting auto-commit system for Blood Covenant...\n');
+    await initGit();
+    startWatching();
+    
+    // Initial commit if there are uncommitted changes
+    setTimeout(() => {
       commitChanges();
-    }
-    process.exit(0);
-  });
+    }, 5000);
+
+    // Keep the process running
+    process.on('SIGINT', () => {
+      console.log('\n\n🛑 Stopping auto-commit system...');
+      if (changeTimer) {
+        clearTimeout(changeTimer);
+      }
+      commitChanges().then(() => {
+        process.exit(0);
+      }).catch(() => {
+        process.exit(0);
+      });
+    });
+
+    // Handle uncaught errors to keep the process alive
+    process.on('uncaughtException', (error) => {
+      console.error('❌ Uncaught exception:', error);
+    });
+
+    process.on('unhandledRejection', (error) => {
+      console.error('❌ Unhandled rejection:', error);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start auto-commit system:', error);
+    process.exit(1);
+  }
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  console.error('❌ Fatal error:', error);
+  process.exit(1);
+});
