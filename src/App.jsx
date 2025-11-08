@@ -34,11 +34,11 @@ function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a]">
         <div className="max-w-6xl mx-auto px-8 py-8">
-          <header className="text-center mb-12">
-            <h1 className="text-5xl mb-2 bg-gradient-to-r from-[#8b0000] to-[#ff0000] bg-clip-text text-transparent">
+          <header className="text-center mb-16">
+            <h1 className="text-6xl mb-4 font-extrabold bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-2xl">
               🧛 Blood Covenant
             </h1>
-            <p className="text-xl text-[#b0b0b0]">Enter the dark world of vampires</p>
+            <p className="text-2xl text-gray-400 font-medium">Enter the dark world of vampires</p>
           </header>
           <WalletConnect />
         </div>
@@ -60,11 +60,11 @@ function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a]">
         <div className="max-w-6xl mx-auto px-8 py-8">
-          <header className="text-center mb-12">
-            <h1 className="text-5xl mb-2 bg-gradient-to-r from-[#8b0000] to-[#ff0000] bg-clip-text text-transparent">
+          <header className="text-center mb-16">
+            <h1 className="text-6xl mb-4 font-extrabold bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-2xl">
               🧛 Blood Covenant
             </h1>
-            <p className="text-xl text-[#b0b0b0]">Create your vampire</p>
+            <p className="text-2xl text-gray-400 font-medium">Create your vampire</p>
           </header>
           <MintVampire onMint={loadVampire} />
         </div>

@@ -26,40 +26,59 @@ export default function Coven({ vampire, onUpdate }) {
     }
   }
 
-  if (loading) return <div className="text-center py-12 text-xl text-[#b0b0b0]">Loading bloodline...</div>
+  if (loading) return <div className="text-center py-12 text-xl text-gray-400">Loading bloodline...</div>
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Your Bloodline</h2>
-      <p className="text-[#b0b0b0] mb-8">Vampires you have turned and their descendants</p>
+      <div className="text-center mb-10">
+        <h2 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          👥 Your Bloodline
+        </h2>
+        <p className="text-gray-400 text-lg font-medium">Vampires you have turned and their descendants</p>
+      </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 mb-8">
-        <div className="bg-[#2a2a2a] p-6 rounded-lg border border-[#333333] text-center">
-          <h3 className="text-sm text-[#b0b0b0] mb-2">Direct Turns</h3>
-          <p className="text-4xl font-bold text-[#8b0000]">{vampire.directTurns}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+        <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 text-center card-hover shadow-xl">
+          <h3 className="text-sm font-semibold text-gray-400 mb-4 uppercase tracking-wide">Direct Turns</h3>
+          <p className="text-6xl font-extrabold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">{vampire.directTurns}</p>
         </div>
-        <div className="bg-[#2a2a2a] p-6 rounded-lg border border-[#333333] text-center">
-          <h3 className="text-sm text-[#b0b0b0] mb-2">Total Bloodline</h3>
-          <p className="text-4xl font-bold text-[#8b0000]">{vampire.totalBloodline}</p>
+        <div className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 text-center card-hover shadow-xl">
+          <h3 className="text-sm font-semibold text-gray-400 mb-4 uppercase tracking-wide">Total Bloodline</h3>
+          <p className="text-6xl font-extrabold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">{vampire.totalBloodline}</p>
         </div>
       </div>
 
       {bloodline && bloodline.directChildren && bloodline.directChildren.length > 0 ? (
         <div className="mt-8">
-          <h3 className="text-xl font-bold mb-4">Your Direct Turns</h3>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 mt-4">
+          <h3 className="text-2xl font-extrabold mb-6 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            Your Direct Turns
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {bloodline.directChildren.map((child, index) => (
-              <div key={index} className="bg-[#2a2a2a] p-4 rounded-lg border border-[#333333]">
-                <p className="font-semibold">Vampire: {child.walletAddress.slice(0, 6)}...{child.walletAddress.slice(-4)}</p>
-                <p className="text-sm text-[#b0b0b0] mt-2">Rank: {child.rank}</p>
+              <div key={index} className="bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-700/50 shadow-lg card-hover">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-xl font-bold shadow-lg">
+                    {child.walletAddress[2]}{child.walletAddress[3]}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-extrabold text-white text-sm">
+                      {child.walletAddress.slice(0, 6)}...{child.walletAddress.slice(-4)}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">Vampire #{index + 1}</p>
+                  </div>
+                </div>
+                <div className="px-3 py-2 bg-gradient-to-r from-red-700 to-red-800 rounded-lg inline-block">
+                  <p className="text-sm font-bold text-white">Rank: {child.rank}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <div className="text-center py-12 text-[#b0b0b0]">
-          <p className="mb-2">You haven't turned any vampires yet.</p>
-          <p>Share your referral code to start building your bloodline!</p>
+        <div className="text-center py-16 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl border border-gray-700/30">
+          <div className="text-6xl mb-4">🧛</div>
+          <p className="text-xl text-gray-400 mb-2 font-semibold">You haven't turned any vampires yet.</p>
+          <p className="text-gray-500">Share your referral code to start building your bloodline!</p>
         </div>
       )}
     </div>
