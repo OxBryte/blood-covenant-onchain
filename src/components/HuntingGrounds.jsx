@@ -48,6 +48,14 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
     !vampire.lastHunt ||
     new Date() - new Date(vampire.lastHunt) > 24 * 60 * 60 * 1000;
 
+  const selectedGroundDetails = grounds.find(
+    (ground) => ground.name === selectedGround
+  );
+  const potentialReward =
+    selectedGroundDetails && !Number.isNaN(stakeAmount)
+      ? stakeAmount * selectedGroundDetails.multiplier
+      : null;
+
   const descriptionColor = isDark ? "text-gray-300" : "text-gray-600";
 
   const noticeClasses = isDark
@@ -88,16 +96,21 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
     <div className="space-y-8">
       <div className="text-center space-y-2">
         <div className="text-4xl">🌙</div>
-        <h2 className={`text-2xl font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}>
+        <h2
+          className={`text-2xl font-semibold ${
+            isDark ? "text-gray-100" : "text-gray-900"
+          }`}
+        >
           Hunting grounds
         </h2>
         <p className={`${descriptionColor} text-sm`}>
-          Stake tokens for 24 hours and earn rewards based on your vampire's power.
+          Stake tokens for 24 hours and earn rewards based on your vampire's
+          power.
         </p>
       </div>
 
       {!canHunt && (
-        <div className={`${noticeClasses} rounded-2xl px-5 py-4 text-sm`}> 
+        <div className={`${noticeClasses} rounded-2xl px-5 py-4 text-sm`}>
           <div className="flex items-center gap-3">
             <span className="text-lg">⏰</span>
             <div>
@@ -110,12 +123,19 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
         </div>
       )}
 
-      <div className={`${formSurface} rounded-3xl px-6 py-6 shadow-xl shadow-black/20 transition-colors duration-300`}> 
+      <div
+        className={`${formSurface} rounded-3xl px-6 py-7 shadow-xl shadow-black/20 transition-colors duration-300`}
+      >
         <form onSubmit={handleHunt} className="space-y-6">
-          <div className="space-y-3">
-            <label htmlFor="ground" className={labelClasses}>
-              Select hunting ground
-            </label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label htmlFor="ground" className={labelClasses}>
+                Select hunting ground
+              </label>
+              <span className="text-xs uppercase tracking-wide text-purple-300">
+                Required
+              </span>
+            </div>
             <select
               id="ground"
               value={selectedGround}
@@ -125,37 +145,111 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
             >
               <option value="">Choose a ground...</option>
               {grounds.map((ground) => (
-                <option key={ground.name} value={ground.name} disabled={!ground.unlocked}>
-                  {ground.name} {ground.unlocked ? `(${ground.multiplier}x)` : "(Locked)"}
+                <option
+                  key={ground.name}
+                  value={ground.name}
+                  disabled={!ground.unlocked}
+                >
+                  {ground.name}{" "}
+                  {ground.unlocked ? `(${ground.multiplier}x)` : "(Locked)"}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="space-y-3">
+          {selectedGroundDetails && (
+            <div
+              className={`grid gap-3 rounded-2xl border px-4 py-4 text-sm ${
+                isDark
+                  ? "border-white/10 bg-white/5"
+                  : "border-purple-100 bg-purple-50"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-semibold">
+                  {selectedGroundDetails.name}
+                </span>
+                <span className="text-xs uppercase tracking-wide text-purple-300">
+                  {selectedGroundDetails.multiplier}x reward
+                </span>
+              </div>
+              <div
+                className={`flex items-center justify-between text-xs sm:text-sm ${
+                  isDark ? "text-purple-200" : "text-purple-600"
+                }`}
+              >
+                <span>Status</span>
+                <span
+                  className={`font-semibold ${
+                    isDark ? "text-purple-100" : "text-purple-700"
+                  }`}
+                >
+                  {selectedGroundDetails.unlocked ? "Unlocked" : "Locked"}
+                </span>
+              </div>
+              <p
+                className={`text-xs sm:text-sm ${
+                  isDark ? "text-purple-200/80" : "text-purple-700/80"
+                }`}
+              >
+                Hunt duration is 24 hours. Rewards scale with your vampire power
+                and the ground multiplier.
+              </p>
+            </div>
+          )}
+
+          <div className="space-y-2">
             <label htmlFor="stake" className={labelClasses}>
               Stake amount (ETH)
             </label>
-            <input
-              type="number"
-              id="stake"
-              value={stakeAmount}
-              onChange={(e) => setStakeAmount(parseFloat(e.target.value))}
-              min="0.0001"
-              step="0.0001"
-              className={inputSurface}
-              required
-            />
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <input
+                type="number"
+                id="stake"
+                value={stakeAmount}
+                onChange={(e) => setStakeAmount(parseFloat(e.target.value))}
+                min="0.0001"
+                step="0.0001"
+                className={`${inputSurface} sm:flex-1`}
+                required
+              />
+              {selectedGroundDetails && potentialReward !== null && (
+                <div
+                  className={`rounded-xl px-4 py-2 text-xs ${
+                    isDark
+                      ? "border border-white/10 bg-white/5 text-purple-100"
+                      : "border border-purple-100 bg-white text-purple-600"
+                  }`}
+                >
+                  Potential reward:{" "}
+                  <span
+                    className={`font-semibold ${
+                      isDark ? "text-purple-200" : "text-purple-700"
+                    }`}
+                  >
+                    {potentialReward.toFixed(4)} ETH
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
-          <button type="submit" className={submitClasses} disabled={loading || !canHunt}>
+          <button
+            type="submit"
+            className={submitClasses}
+            disabled={loading || !canHunt}
+          >
             {loading ? "Starting hunt..." : "Start hunt"}
           </button>
         </form>
       </div>
 
       <div className="space-y-4">
-        <h3 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}>
+        <h3
+          className={`text-lg font-semibold ${
+            isDark ? "text-gray-100" : "text-gray-900"
+          }`}
+        >
           Available grounds
         </h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -164,7 +258,11 @@ export default function HuntingGrounds({ vampire, onUpdate }) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span>{ground.unlocked ? "🌙" : "🔒"}</span>
-                  <p className={`text-sm font-semibold ${isDark ? "text-gray-100" : "text-gray-800"}`}>
+                  <p
+                    className={`text-sm font-semibold ${
+                      isDark ? "text-gray-100" : "text-gray-800"
+                    }`}
+                  >
                     {ground.name}
                   </p>
                 </div>
