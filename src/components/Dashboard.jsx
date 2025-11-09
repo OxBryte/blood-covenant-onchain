@@ -4,12 +4,8 @@ import HuntingGrounds from "./HuntingGrounds";
 import Coven from "./Coven";
 import PvP from "./PvP";
 import Leaderboard from "./Leaderboard";
-import { useAppKitAccount } from "@reown/appkit/react";
-import { useAppKit } from "@reown/appkit/react";
 
 export default function Dashboard({ vampire, onUpdate }) {
-  const { address } = useAppKitAccount();
-  const { open } = useAppKit();
   const [activeTab, setActiveTab] = useState("profile");
 
   const tabs = [
@@ -22,26 +18,6 @@ export default function Dashboard({ vampire, onUpdate }) {
 
   return (
     <div className="space-y-12 animate-[slide-up_0.6s_ease-out]">
-      {/* Header */}
-      <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between pb-8 border-b-2 border-gradient-to-r from-transparent via-red-900/50 to-transparent blood-drip">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-3xl shadow-lg shadow-red-900/50 animate-[pulse-glow_2s_ease-in-out_infinite]">
-            🧛
-          </div>
-          <h1 className="text-5xl font-black bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-lg">
-            Blood Covenant
-          </h1>
-        </div>
-        <div 
-          className="cursor-pointer px-6 py-3 bg-gradient-to-r from-gray-800/90 to-gray-900/90 border-2 border-red-900/50 rounded-xl hover:from-red-900/30 hover:to-red-800/30 hover:border-red-600/70 transition-all duration-300 shadow-xl shadow-red-900/30 hover:shadow-red-900/50 hover:scale-105 backdrop-blur-sm"
-          onClick={() => open()}
-        >
-          <span className="text-base font-bold text-white">
-            <span className="text-red-500">●</span> {address?.slice(0, 6)}...{address?.slice(-4)}
-          </span>
-        </div>
-      </header>
-
       {/* Navigation Tabs */}
       <nav className="flex gap-4 flex-wrap justify-center">
         {tabs.map((tab) => (
@@ -54,7 +30,9 @@ export default function Dashboard({ vampire, onUpdate }) {
             }`}
             onClick={() => setActiveTab(tab.id)}
           >
-            <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{tab.icon}</span>
+            <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
+              {tab.icon}
+            </span>
             <span className="relative z-10">{tab.label}</span>
             {activeTab === tab.id && (
               <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-700/20 animate-pulse"></div>
@@ -68,12 +46,10 @@ export default function Dashboard({ vampire, onUpdate }) {
         {/* Decorative corner accent */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-red-600/10 to-transparent rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-red-600/10 to-transparent rounded-full blur-3xl"></div>
-        
+
         {/* Content */}
         <div className="relative z-10">
-          {activeTab === "profile" && (
-            <VampireProfile vampire={vampire} onUpdate={onUpdate} />
-          )}
+          {activeTab === "profile" && <VampireProfile vampire={vampire} />}
           {activeTab === "hunt" && (
             <HuntingGrounds vampire={vampire} onUpdate={onUpdate} />
           )}
