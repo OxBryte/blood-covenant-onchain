@@ -21,48 +21,68 @@ export default function Dashboard({ vampire, onUpdate }) {
   ];
 
   return (
-    <div className="space-y-10">
-      <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between pb-6 border-b border-gray-800/60">
-        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-red-600 via-red-700 to-red-800 bg-clip-text text-transparent">
-          🧛 Blood Covenant
-        </h1>
+    <div className="space-y-12 animate-[slide-up_0.6s_ease-out]">
+      {/* Header */}
+      <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between pb-8 border-b-2 border-gradient-to-r from-transparent via-red-900/50 to-transparent blood-drip">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-3xl shadow-lg shadow-red-900/50 animate-[pulse-glow_2s_ease-in-out_infinite]">
+            🧛
+          </div>
+          <h1 className="text-5xl font-black bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-lg">
+            Blood Covenant
+          </h1>
+        </div>
         <div 
-          className="cursor-pointer px-5 py-2.5 bg-gradient-to-r from-red-900/20 to-red-800/20 border border-red-900/50 rounded-xl hover:from-red-900/30 hover:to-red-800/30 hover:border-red-700/50 transition-all duration-300 shadow-lg shadow-red-900/20"
+          className="cursor-pointer px-6 py-3 bg-gradient-to-r from-gray-800/90 to-gray-900/90 border-2 border-red-900/50 rounded-xl hover:from-red-900/30 hover:to-red-800/30 hover:border-red-600/70 transition-all duration-300 shadow-xl shadow-red-900/30 hover:shadow-red-900/50 hover:scale-105 backdrop-blur-sm"
           onClick={() => open()}
         >
-          <span className="text-sm font-semibold">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+          <span className="text-base font-bold text-white">
+            <span className="text-red-500">●</span> {address?.slice(0, 6)}...{address?.slice(-4)}
+          </span>
         </div>
       </header>
 
-      <nav className="flex gap-3 mb-10 flex-wrap justify-center">
+      {/* Navigation Tabs */}
+      <nav className="flex gap-4 flex-wrap justify-center">
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`flex items-center gap-2.5 px-6 py-3 rounded-xl text-white cursor-pointer transition-all duration-300 font-semibold ${
+            className={`group relative flex items-center gap-3 px-8 py-4 rounded-2xl text-white cursor-pointer transition-all duration-300 font-bold text-base overflow-hidden ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-red-700 to-red-800 shadow-lg shadow-red-900/50 scale-105"
-                : "bg-gradient-to-r from-gray-800/50 to-gray-900/50 border border-gray-700/50 hover:from-gray-700/50 hover:to-gray-800/50 hover:scale-105 hover:shadow-lg hover:shadow-red-900/20"
+                ? "bg-gradient-to-r from-red-600 to-red-700 shadow-xl shadow-red-900/60 scale-105 ring-2 ring-red-500/50"
+                : "bg-gradient-to-r from-gray-800/70 to-gray-900/70 border-2 border-gray-700/50 hover:from-gray-700/70 hover:to-gray-800/70 hover:scale-105 hover:shadow-xl hover:shadow-red-900/30 hover:border-red-800/50"
             }`}
             onClick={() => setActiveTab(tab.id)}
           >
-            <span className="text-lg">{tab.icon}</span>
-            <span>{tab.label}</span>
+            <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{tab.icon}</span>
+            <span className="relative z-10">{tab.label}</span>
+            {activeTab === tab.id && (
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-700/20 animate-pulse"></div>
+            )}
           </button>
         ))}
       </nav>
 
-      <main className="bg-gradient-to-br from-gray-900/80 via-gray-800/60 to-gray-900/80 backdrop-blur-sm p-10 rounded-3xl border border-gray-700/50 min-h-[500px] shadow-2xl shadow-black/50">
-        {activeTab === "profile" && (
-          <VampireProfile vampire={vampire} onUpdate={onUpdate} />
-        )}
-        {activeTab === "hunt" && (
-          <HuntingGrounds vampire={vampire} onUpdate={onUpdate} />
-        )}
-        {activeTab === "coven" && (
-          <Coven vampire={vampire} onUpdate={onUpdate} />
-        )}
-        {activeTab === "pvp" && <PvP vampire={vampire} onUpdate={onUpdate} />}
-        {activeTab === "leaderboard" && <Leaderboard />}
+      {/* Main Content Area */}
+      <main className="relative bg-gradient-to-br from-gray-900/90 via-gray-800/80 to-gray-900/90 backdrop-blur-md p-12 rounded-3xl border-2 border-gray-700/60 min-h-[600px] shadow-2xl shadow-black/60 overflow-hidden">
+        {/* Decorative corner accent */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-red-600/10 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-red-600/10 to-transparent rounded-full blur-3xl"></div>
+        
+        {/* Content */}
+        <div className="relative z-10">
+          {activeTab === "profile" && (
+            <VampireProfile vampire={vampire} onUpdate={onUpdate} />
+          )}
+          {activeTab === "hunt" && (
+            <HuntingGrounds vampire={vampire} onUpdate={onUpdate} />
+          )}
+          {activeTab === "coven" && (
+            <Coven vampire={vampire} onUpdate={onUpdate} />
+          )}
+          {activeTab === "pvp" && <PvP vampire={vampire} onUpdate={onUpdate} />}
+          {activeTab === "leaderboard" && <Leaderboard />}
+        </div>
       </main>
     </div>
   );
