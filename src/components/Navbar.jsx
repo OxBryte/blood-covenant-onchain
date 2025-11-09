@@ -31,9 +31,9 @@ export default function Navbar() {
     : "inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-2 text-sm font-semibold text-white shadow shadow-rose-200 transition-transform duration-200 hover:scale-105 hover:bg-rose-400";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 backdrop-blur-lg">
+    <header className="fixed inset-x-0 top-0 z-50 backdrop-blur-lg w-full">
       <nav className={`${navClasses} transition-colors duration-300`}> 
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
+        <div className="!mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3">
             <span className={badgeClasses}>🧛</span>
             <span className={`text-lg font-semibold tracking-tight ${titleClasses}`}>

@@ -16,20 +16,20 @@ export default function ScreenLayout({
 
   return (
     <div
-      className={`min-h-screen mx-auto w-full ${backgroundClass} transition-colors duration-500`}
+      className={`min-h-screen mx-auto w-full transition-colors duration-500`}
     >
-      <div
+      {/* <div
         className="pointer-events-none fixed inset-0 -z-10 opacity-90"
         aria-hidden
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(156,18,36,0.25),_transparent_55%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(90,9,22,0.2),_transparent_60%)]" />
-      </div>
+      </div> */}
 
       <Navbar />
 
       <div
-        className={`mx-auto w-full ${maxWidth} space-y-10 transition-all duration-500`}
+        className={`!mx-auto w-full ${maxWidth} !mt-20 space-y-10 transition-all duration-500`}
       >
         <header className="text-center space-y-3">
           <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-red-300/90">
