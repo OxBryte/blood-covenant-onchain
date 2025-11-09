@@ -9,7 +9,6 @@ export default function ScreenLayout({
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
-  const backgroundClass = isDark ? "bg-[#0b0606]" : "bg-[#f8f2f2]";
   const subtitleClass = isDark
     ? "text-lg text-gray-300/90"
     : "text-lg text-gray-600";
