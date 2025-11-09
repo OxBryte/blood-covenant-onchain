@@ -34,7 +34,7 @@ export default function Dashboard({ vampire, onUpdate }) {
         </div>
       </header>
 
-      <nav className="flex gap-3 mb-10 flex-wrap">
+      <nav className="flex gap-3 mb-10 flex-wrap justify-center">
         {tabs.map((tab) => (
           <button
             key={tab.id}

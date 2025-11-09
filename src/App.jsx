@@ -5,6 +5,26 @@ import MintVampire from "./components/MintVampire";
 import { fetchVampire } from "./services/api";
 import { useAppKitAccount } from "@reown/appkit/react";
 
+const ScreenLayout = ({ title, subtitle, children, maxWidth = "max-w-6xl" }) => (
+  <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a]">
+    <div className="flex min-h-screen items-center justify-center px-6 py-16">
+      <div className={`w-full ${maxWidth} mx-auto space-y-12`}>
+        {title && (
+          <header className="text-center space-y-4">
+            <h1 className="text-6xl font-extrabold bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-2xl">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-2xl text-gray-400 font-medium">{subtitle}</p>
+            )}
+          </header>
+        )}
+        {children}
+      </div>
+    </div>
+  </div>
+);
+
 function App() {
   const { address, isConnected } = useAppKitAccount();
   const [vampire, setVampire] = useState(null);
@@ -32,56 +52,44 @@ function App() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a] flex items-center justify-center py-16 px-6">
-        <div className="w-full max-w-6xl">
-          <header className="text-center mb-16">
-            <h1 className="text-6xl mb-4 font-extrabold bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-2xl">
-              🧛 Blood Covenant
-            </h1>
-            <p className="text-2xl text-gray-400 font-medium">
-              Enter the dark world of vampires
-            </p>
-          </header>
+      <ScreenLayout
+        title="🧛 Blood Covenant"
+        subtitle="Enter the dark world of vampires"
+      >
+        <div className="mx-auto max-w-xl">
           <WalletConnect />
         </div>
-      </div>
+      </ScreenLayout>
     );
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a] flex items-center justify-center py-16 px-6">
-        <div className="w-full max-w-4xl text-center py-16 bg-black/30 rounded-3xl border border-gray-800/60 backdrop-blur-sm text-xl text-gray-300 shadow-2xl shadow-black/40">
+      <ScreenLayout>
+        <div className="mx-auto max-w-4xl text-center py-16 bg-black/30 rounded-3xl border border-gray-800/60 backdrop-blur-sm text-xl text-gray-300 shadow-2xl shadow-black/40">
           Loading your vampire...
         </div>
-      </div>
+      </ScreenLayout>
     );
   }
 
   if (!vampire) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a] flex items-center justify-center py-16 px-6">
-        <div className="w-full max-w-6xl">
-          <header className="text-center mb-16">
-            <h1 className="text-6xl mb-4 font-extrabold bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-2xl">
-              🧛 Blood Covenant
-            </h1>
-            <p className="text-2xl text-gray-400 font-medium">
-              Create your vampire
-            </p>
-          </header>
+      <ScreenLayout
+        title="🧛 Blood Covenant"
+        subtitle="Create your vampire"
+      >
+        <div className="mx-auto max-w-3xl">
           <MintVampire onMint={loadVampire} />
         </div>
-      </div>
+      </ScreenLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] to-[#1a0a0a] flex items-center justify-center py-16 px-6">
-      <div className="w-full max-w-6xl">
-        <Dashboard vampire={vampire} onUpdate={loadVampire} />
-      </div>
-    </div>
+    <ScreenLayout>
+      <Dashboard vampire={vampire} onUpdate={loadVampire} />
+    </ScreenLayout>
   );
 }
 
