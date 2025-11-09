@@ -21,8 +21,8 @@ export default function Dashboard({ vampire, onUpdate }) {
   ];
 
   return (
-    <div className="min-h-screen">
-      <header className="flex justify-between items-center mb-10 pb-6 border-b border-gradient-to-r from-transparent via-red-900/30 to-transparent">
+    <div className="space-y-10">
+      <header className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between pb-6 border-b border-gray-800/60">
         <h1 className="text-4xl font-extrabold bg-gradient-to-r from-red-600 via-red-700 to-red-800 bg-clip-text text-transparent">
           🧛 Blood Covenant
         </h1>
