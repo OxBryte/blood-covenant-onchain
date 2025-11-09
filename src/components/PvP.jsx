@@ -47,54 +47,46 @@ export default function PvP({ vampire, onUpdate }) {
   }, []);
 
   const descriptionColor = isDark ? "text-gray-300" : "text-gray-600";
-  const highlightColor = isDark ? "text-green-400" : "text-green-600";
 
-  const formContainerClasses = isDark
-    ? "bg-gradient-to-br from-red-900/20 via-gray-800/90 to-gray-900/90 border-2 border-red-700/30 shadow-2xl shadow-red-900/20"
-    : "bg-white border-2 border-red-200/70 shadow-xl shadow-red-100/70";
+  const formSurface = isDark
+    ? "bg-white/5 border border-white/10"
+    : "bg-white border border-rose-100";
 
   const labelClasses = isDark
-    ? "block mb-3 font-bold text-red-200 text-lg"
-    : "block mb-3 font-bold text-red-700 text-lg";
+    ? "text-sm font-semibold text-rose-200"
+    : "text-sm font-semibold text-rose-700";
 
   const inputClasses = isDark
-    ? "w-full px-6 py-5 bg-gradient-to-br from-gray-900 to-black border-2 border-red-700/40 rounded-2xl text-white text-lg focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/40 transition-all duration-300 font-medium shadow-inner font-mono"
-    : "w-full px-6 py-5 bg-white border-2 border-red-200/70 rounded-2xl text-gray-800 text-lg focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-300/60 transition-all duration-300 font-medium shadow-inner shadow-red-50 font-mono";
+    ? "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-100 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/40"
+    : "w-full rounded-xl border border-rose-200 bg-white px-4 py-3 text-sm text-gray-800 focus:border-rose-400 focus:ring-2 focus:ring-rose-300/40";
 
-  const submitButtonClasses = isDark
-    ? "w-full px-10 py-5 bg-gradient-to-r from-red-600 to-red-700 text-white border-2 border-red-500/50 rounded-2xl text-xl font-black cursor-pointer transition-all duration-300 hover:from-red-500 hover:to-red-600 hover:scale-105 hover:shadow-2xl hover:shadow-red-900/60 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none shadow-xl shadow-red-900/40 uppercase tracking-wide"
-    : "w-full px-10 py-5 bg-gradient-to-r from-red-500 to-red-600 text-white border-2 border-red-300/70 rounded-2xl text-xl font-black cursor-pointer transition-all duration-300 hover:from-red-500 hover:to-red-600 hover:scale-105 hover:shadow-xl hover:shadow-red-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none shadow-xl shadow-red-200/70 uppercase tracking-wide";
+  const submitClasses = isDark
+    ? "w-full rounded-xl bg-rose-500 px-4 py-3 text-sm font-semibold text-white shadow shadow-rose-900/40 transition-transform duration-200 hover:scale-[1.02] hover:bg-rose-400 disabled:opacity-60"
+    : "w-full rounded-xl bg-rose-500 px-4 py-3 text-sm font-semibold text-white shadow shadow-rose-200 transition-transform duration-200 hover:scale-[1.02] hover:bg-rose-400 disabled:opacity-60";
 
-  const leaderboardCardClasses = isDark
-    ? "flex justify-between items-center px-8 py-5 bg-gradient-to-br from-red-900/20 via-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl border-2 border-red-700/30 shadow-xl hover:shadow-2xl hover:shadow-red-900/40 transition-all duration-300 hover:scale-[1.02] cursor-pointer group"
-    : "flex justify-between items-center px-8 py-5 bg-white rounded-2xl border-2 border-red-200/70 shadow-xl shadow-red-100/60 hover:border-red-400/70 hover:shadow-2xl hover:shadow-red-200/60 transition-all duration-300 hover:scale-[1.02] cursor-pointer group";
+  const cardClasses = isDark
+    ? "rounded-2xl border border-white/10 bg-white/5 px-5 py-4 transition-transform duration-200 hover:-translate-y-1"
+    : "rounded-2xl border border-rose-100 bg-white px-5 py-4 transition-transform duration-200 hover:-translate-y-1";
 
-  const addressColor = isDark ? "text-white group-hover:text-red-400" : "text-red-700 group-hover:text-red-500";
+  const addressColor = isDark ? "text-gray-100" : "text-rose-700";
 
   return (
-    <div className="animate-[slide-up_0.6s_ease-out]">
-      <div className="text-center mb-12">
-        <div className="inline-block mb-4">
-          <div className="text-6xl animate-[float_3s_ease-in-out_infinite]">⚔️</div>
-        </div>
-        <h2 className="text-5xl font-black mb-4 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent drop-shadow-lg">
-          Battle Arena
+    <div className="space-y-8">
+      <div className="text-center space-y-2">
+        <div className="text-4xl">⚔️</div>
+        <h2 className={`text-2xl font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}>
+          Battle arena
         </h2>
-        <p
-          className={`${descriptionColor} text-lg font-medium max-w-2xl mx-auto transition-colors duration-500`}
-        >
-          Challenge other vampires to duels. Winner takes
-          <span className={`${highlightColor} font-bold`}> 80%</span> of the stake!
+        <p className={`${descriptionColor} text-sm`}>
+          Challenge other vampires. Winner takes 80% of the stake.
         </p>
       </div>
 
-      <div
-        className={`${formContainerClasses} backdrop-blur-md p-10 rounded-3xl mb-12 transition-colors duration-500`}
-      >
-        <form onSubmit={handleChallenge} className="space-y-8">
-          <div>
+      <div className={`${formSurface} rounded-3xl px-6 py-6 shadow-xl shadow-black/20 transition-colors duration-300`}>
+        <form onSubmit={handleChallenge} className="space-y-6">
+          <div className="space-y-3">
             <label htmlFor="opponent" className={labelClasses}>
-              Opponent Wallet Address
+              Opponent wallet address
             </label>
             <input
               type="text"
@@ -107,9 +99,9 @@ export default function PvP({ vampire, onUpdate }) {
             />
           </div>
 
-          <div>
+          <div className="space-y-3">
             <label htmlFor="stake" className={labelClasses}>
-              Stake Amount (ETH)
+              Stake amount (ETH)
             </label>
             <input
               type="number"
@@ -123,42 +115,35 @@ export default function PvP({ vampire, onUpdate }) {
             />
           </div>
 
-          <button type="submit" className={submitButtonClasses} disabled={loading}>
-            {loading ? "⚔️ Challenging..." : "⚔️ Challenge to Duel"}
+          <button type="submit" className={submitClasses} disabled={loading}>
+            {loading ? "Challenging..." : "Challenge"}
           </button>
         </form>
       </div>
 
-      <div>
-        <div className="flex justify-between items-center mb-8">
-          <h3 className="text-3xl font-black bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
-            Top Opponents
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className={`text-lg font-semibold ${isDark ? "text-gray-100" : "text-gray-900"}`}>
+            Top opponents
           </h3>
           <button
             onClick={loadLeaderboard}
-            className={`${
-              isDark
-                ? "px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 border-2 border-red-500/50 rounded-xl font-bold hover:from-red-500 hover:to-red-600 hover:scale-105 transition-all duration-300 shadow-lg shadow-red-900/30"
-                : "px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 border-2 border-red-300/70 rounded-xl font-bold hover:from-red-500 hover:to-red-600 hover:scale-105 transition-all duration-300 shadow-lg shadow-red-200/70"
-            }`}
+            className="rounded-full border border-rose-400/40 px-4 py-2 text-xs font-semibold text-rose-400 transition-colors duration-200 hover:bg-rose-500/10"
           >
-            🔄 Refresh
+            Refresh
           </button>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="grid gap-3">
           {leaderboard.map((vamp, index) => (
-            <div key={vamp.walletAddress} className={leaderboardCardClasses}>
-              <span className="font-black text-2xl bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                #{index + 1}
-              </span>
-              <span
-                className={`${addressColor} font-mono font-bold text-lg flex-1 text-center transition-colors duration-300`}
-              >
+            <div key={vamp.walletAddress} className={cardClasses}>
+              <div className="flex items-center justify-between text-xs uppercase tracking-wide text-rose-300">
+                <span>#{index + 1}</span>
+                <span>{vamp.earnings.total.toFixed(4)} ETH</span>
+              </div>
+              <div className={`mt-3 text-sm font-semibold ${addressColor}`}>
                 {vamp.walletAddress.slice(0, 8)}...{vamp.walletAddress.slice(-6)}
-              </span>
-              <span className="font-black text-xl bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
-                {vamp.earnings.total.toFixed(4)} ETH
-              </span>
+              </div>
+              <div className="mt-2 text-xs text-rose-300">Rank: {vamp.rank}</div>
             </div>
           ))}
         </div>
