@@ -66,8 +66,16 @@ function App() {
   if (loading) {
     return (
       <ScreenLayout>
-        <div className="mx-auto max-w-4xl text-center py-16 bg-black/30 rounded-3xl border border-gray-800/60 backdrop-blur-sm text-xl text-gray-300 shadow-2xl shadow-black/40">
-          Loading your vampire...
+        <div className="mx-auto max-w-xl text-center">
+          <div className="bg-gradient-to-br from-gray-800/90 via-gray-900/80 to-gray-800/90 backdrop-blur-md p-16 rounded-3xl border-2 border-red-900/30 shadow-2xl shadow-red-900/20 animate-[pulse-glow_2s_ease-in-out_infinite]">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-red-700 via-red-800 to-red-900 flex items-center justify-center text-5xl shadow-lg shadow-red-900/50 border-4 border-red-600/50 animate-[float_3s_ease-in-out_infinite]">
+              🧛
+            </div>
+            <div className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+              Awakening your vampire...
+            </div>
+            <div className="mt-4 text-gray-500 text-sm">Please wait</div>
+          </div>
         </div>
       </ScreenLayout>
     );
