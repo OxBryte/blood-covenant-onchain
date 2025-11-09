@@ -12,30 +12,49 @@ const ScreenLayout = ({ subtitle, children, maxWidth = "max-w-6xl" }) => {
   const isDark = theme === "dark";
 
   const backgroundClass = isDark
-    ? "bg-gradient-to-br from-[#0a0a0a] via-[#150505] to-[#221010]"
-    : "bg-gradient-to-br from-[#fff5f5] via-[#ffeaea] to-[#ffe1e1]";
+    ? "bg-[#0b0606]"
+    : "bg-[#f8f2f2]";
 
   const subtitleClass = isDark
-    ? "text-2xl text-gray-300/90 font-medium"
-    : "text-2xl text-gray-600 font-medium";
+    ? "text-lg text-gray-300/90"
+    : "text-lg text-gray-600";
 
   return (
-    <div className={`min-h-screen ${backgroundClass} transition-colors duration-500`}
+    <div className={`min-h-screen ${backgroundClass} transition-colors duration-500`}>
+      <div
+        className="pointer-events-none fixed inset-0 -z-10 opacity-90"
+        aria-hidden
       >
-      <Navbar />
-      <div className="flex min-h-screen items-center justify-center px-6 py-20 pt-44 md:pt-40">
         <div
-          className={`w-full ${maxWidth} mx-auto space-y-12 transition-all duration-500`}
+          className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(156,18,36,0.25),_transparent_55%)]"
+        />
+        <div
+          className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(90,9,22,0.2),_transparent_60%)]"
+        />
+      </div>
+
+      <Navbar />
+
+      <main className="px-4 pb-20 pt-28 sm:px-6 md:pt-24 lg:pt-28">
+        <div
+          className={`mx-auto ${maxWidth} space-y-10 transition-all duration-500`}
         >
-          <header className="text-center space-y-4">
-            <h1 className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-red-500 via-red-600 to-red-700 bg-clip-text text-transparent drop-shadow-2xl">
+          <header className="text-center space-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-red-300/90">
+              Vampires unite
+            </span>
+            <h1
+              className={`text-4xl font-semibold tracking-tight sm:text-5xl ${
+                isDark ? "text-gray-100" : "text-gray-900"
+              }`}
+            >
               Blood Covenant
             </h1>
             {subtitle && <p className={subtitleClass}>{subtitle}</p>}
           </header>
           {children}
         </div>
-      </div>
+      </main>
     </div>
   );
 };
@@ -70,16 +89,14 @@ function AppContent() {
   };
 
   const loadingCardClasses = isDark
-    ? "bg-gradient-to-br from-gray-800/90 via-gray-900/85 to-gray-800/90 border-2 border-red-900/40 shadow-2xl shadow-red-900/30"
-    : "bg-white/90 border-2 border-red-200/80 shadow-xl shadow-red-100";
+    ? "bg-black/50 border border-white/10 shadow-2xl shadow-black/40"
+    : "bg-white border border-rose-200 shadow-xl shadow-rose-100";
 
-  const loadingTextClasses = isDark
-    ? "text-gray-400"
-    : "text-gray-600";
+  const loadingTextClasses = isDark ? "text-gray-300" : "text-gray-600";
 
   if (!isConnected) {
     return (
-      <ScreenLayout subtitle="Enter the vampire realm to begin">
+      <ScreenLayout subtitle="Connect your wallet to enter the covenant">
         <div className="mx-auto max-w-xl">
           <WalletConnect />
         </div>
@@ -90,17 +107,16 @@ function AppContent() {
   if (loading) {
     return (
       <ScreenLayout>
-        <div className="mx-auto max-w-xl text-center">
+        <div className="mx-auto max-w-sm text-center">
           <div
-            className={`${loadingCardClasses} backdrop-blur-md p-16 rounded-3xl animate-[pulse-glow_2s_ease-in-out_infinite] transition-colors duration-500`}
+            className={`${loadingCardClasses} backdrop-blur-xl rounded-3xl px-10 py-12 transition-colors duration-500`}
           >
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-red-600 via-red-700 to-red-800 flex items-center justify-center text-5xl shadow-lg shadow-red-900/50 border-4 border-red-500/60 animate-[float_3s_ease-in-out_infinite]">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-red-700 text-3xl shadow-lg shadow-red-900/40">
               🧛
             </div>
-            <div className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
-              Awakening your vampire...
+            <div className={`text-lg font-semibold ${loadingTextClasses}`}>
+              Summoning your vampire...
             </div>
-            <div className={`mt-4 text-sm ${loadingTextClasses}`}>Please wait</div>
           </div>
         </div>
       </ScreenLayout>
@@ -109,7 +125,7 @@ function AppContent() {
 
   if (!vampire) {
     return (
-      <ScreenLayout subtitle="Create your vampire">
+      <ScreenLayout subtitle="Create your vampire to begin your ascent">
         <div className="mx-auto max-w-3xl">
           <MintVampire onMint={loadVampire} />
         </div>
@@ -118,7 +134,7 @@ function AppContent() {
   }
 
   return (
-    <ScreenLayout>
+    <ScreenLayout subtitle="Manage your clan and plan your next hunt">
       <Dashboard vampire={vampire} onUpdate={loadVampire} />
     </ScreenLayout>
   );
