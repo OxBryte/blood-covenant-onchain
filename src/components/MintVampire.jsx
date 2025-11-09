@@ -61,54 +61,44 @@ export default function MintVampire({ onMint }) {
   };
 
   const containerClasses = isDark
-    ? "bg-gradient-to-br from-gray-800/90 via-gray-900/80 to-gray-800/90 border-2 border-red-900/40 shadow-2xl shadow-red-900/30"
-    : "bg-white/95 border-2 border-red-200/70 shadow-xl shadow-red-100/70";
+    ? "bg-white/5 border border-white/10 text-gray-100"
+    : "bg-white border border-rose-100 text-gray-900";
 
   const inputClasses = isDark
-    ? "w-full px-5 py-4 bg-gradient-to-br from-gray-900 to-black border-2 border-gray-700/50 rounded-xl text-white text-base focus:outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/30 transition-all duration-300"
-    : "w-full px-5 py-4 bg-white border-2 border-red-200/80 rounded-xl text-gray-800 text-base focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-300/60 transition-all duration-300 shadow-inner shadow-red-50";
+    ? "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-gray-100 placeholder:text-gray-500 focus:border-rose-400 focus:ring-2 focus:ring-rose-500/40"
+    : "w-full rounded-xl border border-rose-200 bg-white px-4 py-3 text-sm text-gray-800 placeholder:text-gray-400 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/30";
 
-  const helperTextClass = isDark ? "text-gray-400" : "text-gray-500";
+  const helperTextClass = isDark ? "text-gray-400" : "text-gray-600";
 
-  const featuresBoxClasses = isDark
-    ? "flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl border border-gray-700/30 hover:border-red-700/50"
-    : "flex items-center gap-3 px-4 py-3 bg-red-50 rounded-xl border border-red-200/70 hover:border-red-400/60";
+  const featuresSurface = isDark
+    ? "bg-white/5 border border-white/10 text-gray-100"
+    : "bg-rose-50 border border-rose-100 text-rose-700";
 
-  const featureTextClass = isDark ? "text-gray-200" : "text-red-700";
-
-  const sectionDividerClass = isDark ? "border-gray-700/50" : "border-red-200/70";
+  const sectionDividerClass = isDark ? "border-white/10" : "border-rose-100";
 
   const errorClasses = isDark
-    ? "bg-red-500/20 border-2 border-red-500/50 text-red-400"
-    : "bg-red-100 border-2 border-red-300 text-red-700";
+    ? "bg-red-500/10 border border-red-400/50 text-red-200"
+    : "bg-red-100 border border-red-200 text-red-700";
 
   return (
-    <div className="flex justify-center items-center min-h-[500px] animate-[slide-up_0.6s_ease-out]">
+    <div className="flex justify-center">
       <div
-        className={`${containerClasses} backdrop-blur-xl p-12 rounded-3xl max-w-2xl w-full transition-colors duration-500`}
+        className={`${containerClasses} w-full max-w-xl rounded-3xl px-8 py-10 shadow-xl shadow-black/20 transition-colors duration-300`}
       >
-        <div className="text-center mb-8">
-          <h2 className="text-4xl font-extrabold mb-3 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
-            Create Your Vampire
-          </h2>
-          <p
-            className={`${
-              isDark ? "text-gray-300" : "text-gray-600"
-            } text-lg transition-colors duration-500`}
-          >
-            Pay the entry fee and become a Fledgling Vampire
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold tracking-tight">Create your vampire</h2>
+          <p className={`mt-2 text-sm ${helperTextClass}`}>
+            Pay the entry fee and unlock your place in the covenant.
           </p>
         </div>
 
-        <form onSubmit={handleMint} className="mb-8 space-y-6">
-          <div>
+        <form onSubmit={handleMint} className="mt-8 space-y-6">
+          <div className="space-y-3">
             <label
               htmlFor="referrerCode"
-              className={`${
-                isDark ? "text-gray-200" : "text-gray-700"
-              } block mb-3 font-bold transition-colors duration-500`}
+              className={`block text-sm font-semibold ${isDark ? "text-gray-200" : "text-gray-700"}`}
             >
-              Referrer Code (Optional)
+              Referrer code (optional)
             </label>
             <input
               type="text"
@@ -118,52 +108,40 @@ export default function MintVampire({ onMint }) {
               placeholder="Enter referral code"
               className={inputClasses}
             />
-            <small
-              className={`block mt-3 text-sm font-medium ${helperTextClass} transition-colors duration-500`}
-            >
-              If you were referred by another vampire, enter their code here
-            </small>
+            <p className={`text-xs ${helperTextClass}`}>
+              If someone invited you, enter their code to share rewards.
+            </p>
           </div>
 
           {error && (
-            <div
-              className={`${errorClasses} p-5 rounded-xl text-sm leading-relaxed animate-[shake_0.3s_ease-in-out] shadow-lg`}
-              role="alert"
-            >
-              <strong className="block mb-2 text-base font-bold">⚠️ Error:</strong>
-              {error}
+            <div className={`${errorClasses} rounded-xl px-4 py-3 text-sm`} role="alert">
+              <strong className="font-semibold">Heads up:</strong> {error}
             </div>
           )}
 
           <button
             type="submit"
-            className="w-full px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl text-lg font-extrabold cursor-pointer transition-all duration-300 hover:from-red-700 hover:to-red-800 hover:scale-105 hover:shadow-xl hover:shadow-red-900/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none border-2 border-red-500/50 shadow-lg"
+            className="w-full rounded-xl bg-rose-500 px-4 py-3 text-sm font-semibold text-white shadow shadow-rose-900/30 transition-transform duration-200 hover:scale-[1.02] hover:bg-rose-400 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={loading}
           >
-            {loading ? "🩸 Minting..." : "🩸 Mint Vampire (0.0001 ETH)"}
+            {loading ? "🩸 Minting..." : "Mint vampire (0.0001 ETH)"}
           </button>
         </form>
 
-        <div className={`mt-10 pt-8 border-t ${sectionDividerClass}`}>
-          <h3 className="text-2xl font-extrabold mb-6 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent text-center">
-            What you get:
+        <div className={`mt-8 border-t pt-6 ${sectionDividerClass}`}>
+          <h3 className="text-sm font-semibold tracking-wide text-rose-400">
+            What you receive
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {["Unique Vampire NFT with random traits", "Your own referral code", "Access to hunting grounds", "Ability to build your coven"].map(
-              (item) => (
-                <div
-                  key={item}
-                  className={`${featuresBoxClasses} transition-colors duration-300`}
-                >
-                  <span className="text-2xl">✓</span>
-                  <span
-                    className={`${featureTextClass} font-medium transition-colors duration-500`}
-                  >
-                    {item}
-                  </span>
-                </div>
-              )
-            )}
+          <div className="mt-4 space-y-3 text-sm">
+            {["Unique vampire identity", "Personal referral code", "Access to hunting grounds", "Ability to grow your coven"].map((item) => (
+              <div
+                key={item}
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 ${featuresSurface}`}
+              >
+                <span className="text-rose-400">✓</span>
+                <span>{item}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
