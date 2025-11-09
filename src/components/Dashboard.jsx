@@ -19,59 +19,42 @@ export default function Dashboard({ vampire, onUpdate }) {
     { id: "leaderboard", label: "Leaderboard", icon: "🏆" },
   ];
 
-  const tabBaseClasses =
-    "group relative flex items-center gap-3 px-8 py-4 rounded-2xl cursor-pointer transition-all duration-300 font-bold text-base overflow-hidden";
+  const tabBase =
+    "group inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200";
 
   const activeTabClasses = isDark
-    ? "text-white bg-gradient-to-r from-red-600 to-red-700 shadow-xl shadow-red-900/60 scale-105 ring-2 ring-red-500/50"
-    : "text-white bg-gradient-to-r from-red-500 to-red-600 shadow-xl shadow-red-300/70 scale-105 ring-2 ring-red-400/60";
+    ? "bg-white/10 text-white shadow-sm shadow-black/40"
+    : "bg-rose-500 text-white shadow-sm shadow-rose-200";
 
   const inactiveTabClasses = isDark
-    ? "text-white bg-gradient-to-r from-gray-800/70 to-gray-900/70 border-2 border-gray-700/50 hover:from-gray-700/70 hover:to-gray-800/70 hover:scale-105 hover:shadow-xl hover:shadow-red-900/30 hover:border-red-800/50"
-    : "text-gray-700 bg-white border-2 border-red-200/70 hover:bg-red-50 hover:border-red-300 hover:text-red-600 hover:scale-105 shadow-sm shadow-red-100/50";
+    ? "text-gray-300 hover:bg-white/5"
+    : "text-rose-700 hover:bg-rose-100";
 
-  const containerClasses = isDark
-    ? "relative bg-gradient-to-br from-gray-900/90 via-gray-800/80 to-gray-900/90 border-2 border-gray-700/60 shadow-2xl shadow-black/60"
-    : "relative bg-white/95 border-2 border-red-200/70 shadow-xl shadow-red-100/70";
-
-  const accentOne = isDark
-    ? "bg-gradient-to-br from-red-600/10 to-transparent"
-    : "bg-gradient-to-br from-red-300/30 via-red-200/20 to-transparent";
-
-  const accentTwo = isDark
-    ? "bg-gradient-to-tr from-red-600/10 to-transparent"
-    : "bg-gradient-to-tr from-red-200/30 to-transparent";
+  const panelClasses = isDark
+    ? "relative overflow-hidden rounded-3xl border border-white/5 bg-black/40 px-6 py-8 shadow-xl shadow-black/40"
+    : "relative overflow-hidden rounded-3xl border border-rose-100 bg-white px-6 py-8 shadow-xl shadow-rose-100";
 
   return (
-    <div className="space-y-12 animate-[slide-up_0.6s_ease-out]">
-      <nav className="flex gap-4 flex-wrap justify-center">
+    <div className="space-y-8">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
-              className={`${tabBaseClasses} ${isActive ? activeTabClasses : inactiveTabClasses}`}
               onClick={() => setActiveTab(tab.id)}
+              className={`${tabBase} ${isActive ? activeTabClasses : inactiveTabClasses}`}
             >
-              <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
-                {tab.icon}
-              </span>
-              <span className="relative z-10">{tab.label}</span>
-              {isActive && (
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-700/20 animate-pulse" />
-              )}
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
             </button>
           );
         })}
-      </nav>
+      </div>
 
-      <main
-        className={`${containerClasses} backdrop-blur-md p-12 rounded-3xl min-h-[600px] overflow-hidden transition-colors duration-500`}
-      >
-        <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl ${accentOne}`} />
-        <div className={`absolute bottom-0 left-0 w-64 h-64 rounded-full blur-3xl ${accentTwo}`} />
-
-        <div className="relative z-10">
+      <section className={`${panelClasses} transition-colors duration-300`}> 
+        <div className="absolute inset-y-0 left-0 w-1/3 opacity-10 blur-3xl" />
+        <div className="relative">
           {activeTab === "profile" && <VampireProfile vampire={vampire} />}
           {activeTab === "hunt" && (
             <HuntingGrounds vampire={vampire} onUpdate={onUpdate} />
@@ -82,7 +65,7 @@ export default function Dashboard({ vampire, onUpdate }) {
           {activeTab === "pvp" && <PvP vampire={vampire} onUpdate={onUpdate} />}
           {activeTab === "leaderboard" && <Leaderboard />}
         </div>
-      </main>
+      </section>
     </div>
   );
 }
